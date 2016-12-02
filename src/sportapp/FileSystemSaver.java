@@ -8,7 +8,9 @@ package sportapp;
 import java.awt.Event;
 import java.awt.Color;
 import java.awt.Dimension;
-//import java.awt.event.ActionListener;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -32,18 +34,16 @@ public class FileSystemSaver extends JFrame {
     private JFrame windowDialog;
     private JList fileList;
     private JScrollPane masterList;
-    private JButton saveHere;
+    private JButton saveHere, upperDir;
     private JTextField varFileName;
     private JLabel whereToSave;
     private JPanel mainPanel;
     private Border solidBlack = new LineBorder(Color.DARK_GRAY);
-    //private ActionListener iventReader;
-    //private MouseListener mouseReader;
     
     private String[] fileMass = {"qqq", "www", "eee", "rrr", "ttt", "yyy"};
     private String currentDir = System.getProperty("user.dir");
     private File fileSystemIFace = new File(currentDir);
-    private int margin = 15, textHeight = 30, windowWidth = 600, windowHeight = 400, listHeight = 250, fileNameWidth = 450, buttonWidth = 100;
+    private int margin = 15, textHeight = 30, windowWidth = 600, windowHeight = 400, upperDirHeight = 20, listHeight = 230, fileNameWidth = 450, buttonWidth = 100;
     private Dimension winSize = new Dimension(windowWidth, windowHeight);
     
     
@@ -70,6 +70,12 @@ public class FileSystemSaver extends JFrame {
         whereToSave.setBorder(solidBlack);
         mainPanel.add(whereToSave);
         
+        upperDir = new JButton("..");
+        mainPanel.add(upperDir);
+        upperDir.setSize((windowWidth - margin - margin - 5), upperDirHeight);
+        upperDir.setLocation(margin, (margin + margin + textHeight));
+        upperDir.setHorizontalAlignment(JButton.LEFT);
+        upperDir.setMargin(new Insets(1,1,1,1));
         
         fileList = new JList(fileMass);
         fileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -78,23 +84,41 @@ public class FileSystemSaver extends JFrame {
         masterList = new JScrollPane(fileList);
         mainPanel.add(masterList);
         masterList.setSize((windowWidth - margin - margin - 5), listHeight);
-        masterList.setLocation(margin, (margin + margin + textHeight));
+        masterList.setLocation(margin, (margin + margin + upperDirHeight + textHeight));
                 
         varFileName = new JTextField();
         mainPanel.add(varFileName);
         varFileName.setSize(fileNameWidth, textHeight);
-        varFileName.setLocation(margin, (textHeight + margin + margin + margin + listHeight));
+        varFileName.setLocation(margin, (textHeight + margin + margin + margin + upperDirHeight + listHeight));
         
         saveHere = new JButton("Сохранить");
         mainPanel.add(saveHere);
         saveHere.setSize(buttonWidth, textHeight);
-        saveHere.setLocation((margin + fileNameWidth + margin), (textHeight + margin + margin + margin + listHeight));
+        saveHere.setLocation((margin + fileNameWidth + margin), (textHeight + margin + margin + upperDirHeight + margin + listHeight));
+        
+        upperDir.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e) {
+                if ( (new File(currentDir).getParent()) == null )
+                {
+                    
+                }
+                else
+                {
+                    currentDir = new File(currentDir).getParent();
+                    fileSystemIFace = new File(currentDir);
+                    makeFileList();
+                    fileList.setListData(fileMass);
+                }
+            }
+            
+        }
+        );
         
         MouseListener mouseClicker = new MouseAdapter()
         {
             public void mouseClicked(MouseEvent e) 
             {
-                
                 try {
                     if (e.getClickCount() == 2) {
                         String bufferFilename = fileList.getSelectedValue().toString();
@@ -131,8 +155,7 @@ public class FileSystemSaver extends JFrame {
             if (currentFile.isDirectory()) 
             { 
                 resList[dirCount] = fileMass[i];
-                dirCount++; 
-                
+                dirCount++;
             }
             else 
             {
