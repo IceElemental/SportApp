@@ -23,7 +23,7 @@ public class SportApp {
         //ololo.setVisible(true);
         //String q = System.getProperty("file.separator");
         
-        URL location = SportApp.class.getProtectionDomain().getCodeSource().getLocation();
+        /*URL location = SportApp.class.getProtectionDomain().getCodeSource().getLocation();
         
         System.out.println("file.separator    " + System.getProperty("file.separator"));
         System.out.println("java.class.path   " + System.getProperty("java.class.path"));
@@ -38,6 +38,9 @@ public class SportApp {
         System.out.println("user.dir          " + System.getProperty("user.dir"));
         System.out.println("user.home         " + System.getProperty("user.home"));
         System.out.println("user.name         " + System.getProperty("os.name"));
-        System.out.println("Class location    " + location.getFile());
+        System.out.println("Class location    " + location.getFile());*/
+        
+        FileSystemSaver dniwe = new FileSystemSaver();
+        dniwe.setVisible(true);
     }
 }
