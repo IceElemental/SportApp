@@ -16,15 +16,18 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileSystemView;
 
 /**
  *
@@ -32,6 +35,7 @@ import javax.swing.border.LineBorder;
  */
 public class FileSystemSaver extends JFrame {
     private JFrame windowDialog;
+    private JComboBox rootChoser;
     private JList fileList;
     private JScrollPane masterList;
     private JButton saveHere, upperDir;
@@ -40,10 +44,16 @@ public class FileSystemSaver extends JFrame {
     private JPanel mainPanel;
     private Border solidBlack = new LineBorder(Color.DARK_GRAY);
     
-    private String[] fileMass = {"qqq", "www", "eee", "rrr", "ttt", "yyy"};
+    private static String currentRoot;
+    private static int currentRootIndex;
+    private static File currDir;
+    private static File[] sysRoots = File.listRoots();
+    private String[] rootMass;
+    private String[] fileMass;// = {"qqq", "www", "eee", "rrr", "ttt", "yyy"};
     private String currentDir = System.getProperty("user.dir");
+    private static String s = System.getProperty("file.separator");
     private File fileSystemIFace = new File(currentDir);
-    private int margin = 15, textHeight = 30, windowWidth = 600, windowHeight = 400, upperDirHeight = 20, listHeight = 230, fileNameWidth = 450, buttonWidth = 100;
+    private int margin = 15, textHeight = 30, windowWidth = 600, windowHeight = 400, upperDirHeight = 20, listHeight = 230, fileNameWidth = 450, buttonWidth = 100, rootChoserWidth = 60;
     private Dimension winSize = new Dimension(windowWidth, windowHeight);
     
     
@@ -56,7 +66,8 @@ public class FileSystemSaver extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         makeFileList();
-        
+        makeRootList();
+                
         mainPanel = new JPanel();
         this.add(mainPanel);
         mainPanel.setLayout(null);
@@ -88,8 +99,14 @@ public class FileSystemSaver extends JFrame {
                 
         varFileName = new JTextField();
         mainPanel.add(varFileName);
-        varFileName.setSize(fileNameWidth, textHeight);
-        varFileName.setLocation(margin, (textHeight + margin + margin + margin + upperDirHeight + listHeight));
+        varFileName.setSize(fileNameWidth-rootChoserWidth-margin, textHeight);
+        varFileName.setLocation(margin+margin+rootChoserWidth, (textHeight + margin + margin + margin + upperDirHeight + listHeight));
+        
+        rootChoser = new JComboBox(rootMass);
+        mainPanel.add(rootChoser);
+        rootChoser.setSize(rootChoserWidth, textHeight);
+        rootChoser.setLocation(margin, (textHeight + margin + margin + upperDirHeight + margin + listHeight));
+        rootChoser.setSelectedIndex(currentRootIndex);
         
         saveHere = new JButton("Сохранить");
         mainPanel.add(saveHere);
@@ -114,6 +131,33 @@ public class FileSystemSaver extends JFrame {
             
         }
         );
+        ActionListener rootListener = new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent e) 
+            {
+                JComboBox box = (JComboBox)e.getSource();
+                String item = (String)box.getSelectedItem();
+                if (currentDir.startsWith(item)) { }
+                else 
+                { 
+                    try {
+                        currentDir = item;                        
+                        fileSystemIFace = new File(currentDir);
+                        makeFileList();
+                        fileList.setListData(fileMass);
+                    } 
+                    catch (NullPointerException noDisk) 
+                    {
+                        JOptionPane.showMessageDialog(null, "Диск " + item + " недоступен");
+                    } 
+                    catch (SecurityException secErr)
+                    {
+                        JOptionPane.showMessageDialog(null, "Доступ запрещён");
+                    }
+                }
+            }
+        };
+        rootChoser.addActionListener(rootListener);
         
         MouseListener mouseClicker = new MouseAdapter()
         {
@@ -124,19 +168,22 @@ public class FileSystemSaver extends JFrame {
                         String bufferFilename = fileList.getSelectedValue().toString();
                         if (fileMass.length == 0) {
                             
-                        } else if (!(new File(currentDir + System.getProperty("file.separator") + bufferFilename)).isDirectory()) {
+                        } else if (!(new File(currentDir + s + bufferFilename)).isDirectory()) {
                             varFileName.setText(bufferFilename);
                         }
-                        if ((new File(currentDir + System.getProperty("file.separator") + bufferFilename)).isDirectory()) {
+                        if ((new File(currentDir + s + bufferFilename)).isDirectory()) {
                             varFileName.setText("");
-                            currentDir = currentDir + System.getProperty("file.separator") + bufferFilename;
+                            currentDir = currentDir + s + bufferFilename;
                             fileSystemIFace = new File(currentDir);
                             makeFileList();
                             fileList.setListData(fileMass);
                         };
                     }
-                } catch (NullPointerException except) 
+                } 
+                catch (NullPointerException except) { } 
+                catch (SecurityException secErr)
                 {
+                    JOptionPane.showMessageDialog(null, "Доступ запрещён");
                 }
             }
         };
@@ -151,7 +198,7 @@ public class FileSystemSaver extends JFrame {
         
         for (int i = 0; i < allCount; i++)
         {
-            File currentFile = new File(currDir + System.getProperty("file.separator") + fileMass[i]);
+            File currentFile = new File(currDir + s + fileMass[i]);
             if (currentFile.isDirectory()) 
             { 
                 resList[dirCount] = fileMass[i];
@@ -163,8 +210,7 @@ public class FileSystemSaver extends JFrame {
                 fileCount++; 
             }
         }
-        System.out.println("dirs:  " + dirCount);
-        System.out.println("files: " + fileCount);
+        
         if (dirCount > 1) 
         {
             while (sorterFlag) {
@@ -199,12 +245,26 @@ public class FileSystemSaver extends JFrame {
                 }
             }
         }
-        
         return resList;
     }
 
     private void makeFileList() {
         fileMass = fileSystemIFace.list();
         fileMass = fileListSorter(fileMass, fileSystemIFace);
+    }
+
+    private void makeRootList() {
+        rootMass = new String[sysRoots.length];
+        currDir = new File(currentDir);
+        while (!(currDir.getParent() == null))
+        {
+            currentRoot = currDir.getParent();
+            currDir = new File(currDir.getParent());
+        }
+        for (int i = 0; i < sysRoots.length; i++)
+        {
+            rootMass[i] = sysRoots[i].toString();
+            if (rootMass[i].equals(currentRoot)) { currentRootIndex = i; }
+        }
     }
 }
