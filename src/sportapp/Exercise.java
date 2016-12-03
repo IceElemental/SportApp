@@ -22,7 +22,7 @@ import javax.swing.border.LineBorder;
  *
  * @author VMS
  */
-public class Training extends JFrame {
+public class Exercise extends JFrame {
     private static int height, width, marginTop = 15, marginBottom = 20, marginLR = 20, sizex = 70, sizey = 30, spacex = 15, spacey = 5, textSizeX = 110;
     private static ArrayList<JLabel> trainFields = new ArrayList<>();
     private static HashMap<String, JTextField> weightMap = new HashMap<>();
@@ -36,7 +36,7 @@ public class Training extends JFrame {
     private static String currDate = makeDate.format(today);
     private static boolean saved = false;
     
-    public Training(int number, String name)
+    public Exercise(int number, String name)
     {
         super(name);
         panel = this;
@@ -51,7 +51,7 @@ public class Training extends JFrame {
         createFields(number, name);
     }
     
-    public Training(int number, String name, int defaultWeight, int defaultCount)
+    public Exercise(int number, String name, int defaultWeight, int defaultCount)
     {
         this(number, name);
         for ( int i = 0; i < number; i++)

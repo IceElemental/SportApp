@@ -21,7 +21,7 @@ public class SportApp {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws InterruptedException {
-        // TODO code application logic here
+        
         //Training ololo = new Training(5, "Мамкин драник", 20, 30);
         //ololo.setVisible(true);
 
@@ -32,7 +32,7 @@ public class SportApp {
 //        for (File qqq : mam) {
 //            System.out.println(qqq.toString());
 //        }
-        FileSystemSaver dniwe = new FileSystemSaver();
-        dniwe.setVisible(true);
+//        FileSystemSaver dniwe = new FileSystemSaver();
+//        dniwe.setVisible(true);
     }
 }
