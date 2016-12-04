@@ -51,13 +51,13 @@ public class MasterWindow extends JFrame {
        public MasterWindow()
        {
            super("SportApp");
-           this.setSize(mainWindow);
-           this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-           this.setResizable(false);
-           this.setLocationRelativeTo(null);
-           this.setLayout(null);
+           setSize(mainWindow);
+           setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+           setResizable(false);
+           setLocationRelativeTo(null);
+           setLayout(null);
            greetings = new JLabel("Сегодня отличный день для тренировки!");
-           this.add(greetings);
+           add(greetings);
            greetings.setLocation(15, 0);
            greetings.setSize(mainWindowWidth-30, 30);
            greetings.setHorizontalAlignment(JLabel.CENTER);
@@ -70,7 +70,7 @@ public class MasterWindow extends JFrame {
 // ===================================================================
            
            profilePanel = new JPanel();
-           this.add(profilePanel);
+           add(profilePanel);
            profilePanel.setLayout(null);
            profilePanel.setSize(leftPanelWidth, profilePanelHeight);
            profilePanel.setLocation(margin, profilePanelYPos);
@@ -96,11 +96,11 @@ public class MasterWindow extends JFrame {
             selectProfile = new JButton("Выбрать профиль");
             newProfile = new JButton("Создать профиль");
             
-            this.add(selectProfile);
+            add(selectProfile);
             selectProfile.setSize(leftPanelWidth, 25);
             selectProfile.setLocation(margin, selectProfileYPos);
             
-            this.add(newProfile);
+            add(newProfile);
             newProfile.setSize(leftPanelWidth, 25);
             newProfile.setLocation(margin, newProfileYPos);
 
@@ -109,7 +109,7 @@ public class MasterWindow extends JFrame {
 // ===================================================================
            
             trainignAvailablePanel = new JPanel();
-            this.add(trainignAvailablePanel);
+            add(trainignAvailablePanel);
             trainignAvailablePanel.setLayout(null);
             trainignAvailablePanel.setSize(leftPanelWidth, trainingAvailablePanelHeight);
             trainignAvailablePanel.setLocation(margin, trainingAvailablePanelYPos);
@@ -119,10 +119,10 @@ public class MasterWindow extends JFrame {
 // ===================================================================
 //                 панель Выбора Тренировки
 // ===================================================================
-            exercisePanel = new Exercise(5, "Присед");
+            exercisePanel = new Exercise(5, "Присед",30,8);
             exerciseWindow = new JScrollPane(exercisePanel);
            
-            this.add(exerciseWindow);
+            add(exerciseWindow);
             exerciseWindow.setSize(exerciseWidth, exerciseHeight);
             exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
             exerciseWindow.createVerticalScrollBar();
