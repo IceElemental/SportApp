@@ -63,7 +63,7 @@ public class FileSystemSaver extends JFrame {
         this.setSize(winSize);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         makeFileList();
         makeRootList();

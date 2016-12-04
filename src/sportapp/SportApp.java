@@ -22,9 +22,12 @@ public class SportApp {
      */
     public static void main(String[] args) throws InterruptedException {
         
-        //Training ololo = new Training(5, "Мамкин драник", 20, 30);
-        //ololo.setVisible(true);
-
+        MasterWindow startProgramm = new MasterWindow();
+        startProgramm.setVisible(true);
+//        Training ololo = new Training();
+//        ololo.setVisible(true);
+//        Exercise yoba = new Exercise(5, "qqq");
+//        yoba.setVisible(true);
 //        String s = System.getProperty("file.separator");
 //        File roots = new File("D:\\Photo");
 //        File[] mam = File.listRoots();

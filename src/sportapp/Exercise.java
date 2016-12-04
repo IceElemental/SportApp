@@ -22,12 +22,12 @@ import javax.swing.border.LineBorder;
  *
  * @author VMS
  */
-public class Exercise extends JFrame {
+public class Exercise extends JPanel {
     private static int height, width, marginTop = 15, marginBottom = 20, marginLR = 20, sizex = 70, sizey = 30, spacex = 15, spacey = 5, textSizeX = 110;
     private static ArrayList<JLabel> trainFields = new ArrayList<>();
     private static HashMap<String, JTextField> weightMap = new HashMap<>();
     private static HashMap<String, JTextField> countMap = new HashMap<>();
-    private static JFrame panel;
+    private static JPanel panel;
     private static JButton save;
     private static JLabel weightLabel, countLabel, trainLabel;
     private static String approachResult = "";
@@ -38,15 +38,15 @@ public class Exercise extends JFrame {
     
     public Exercise(int number, String name)
     {
-        super(name);
+//        super(name);
         panel = this;
-        height = marginTop + (sizey + spacey) * ( number + 2 ) + marginBottom + 20;
+        height = marginTop + (sizey + spacey) * ( number + 2 ) + marginBottom;
         width = marginLR + textSizeX + spacex + sizex * 2 + spacex + marginLR + 5;
-        setSize(width, height);
-        setResizable(false);
+        setPreferredSize(new Dimension(width, height));
+//        setResizable(false);
         setLayout(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+//        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//        setLocationRelativeTo(null);
         
         createFields(number, name);
     }
