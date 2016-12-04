@@ -34,19 +34,17 @@ public class Exercise extends JPanel {
     private static Date today = new Date();
     private static SimpleDateFormat makeDate = new SimpleDateFormat("yyyy-MM-dd");
     private static String currDate = makeDate.format(today);
-    private static boolean saved = false;
+    private static boolean saved;
     
     public Exercise(int number, String name)
     {
 //        super(name);
         panel = this;
+        saved = false;
         height = marginTop + (sizey + spacey) * ( number + 2 ) + marginBottom;
         width = marginLR + textSizeX + spacex + sizex * 2 + spacex + marginLR + 5;
         setPreferredSize(new Dimension(width, height));
-//        setResizable(false);
         setLayout(null);
-//        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//        setLocationRelativeTo(null);
         
         createFields(number, name);
     }

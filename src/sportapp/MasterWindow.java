@@ -28,68 +28,68 @@ import java.awt.event.ActionListener;
  * @author VMS
  */
 public class MasterWindow extends JFrame {
-       private JPanel masterPanel, profilePanel, trainingPanel, trainignAvailablePanel, exercisePanel;
-       private JButton showPanel1, showPanel2, createProfile, selectProfile, createTraining, selectTraining, startTraining;
-       private JComboBox selectProfileBox;
-       private JScrollPane exerciseWindow;
-       private JLabel greetings, currentProfileLabel, currentProfileValue, currentTrainingLabel, currentTrainingValue;
-       private JTextArea profileArea;
-       private int mainWindowWidth = 620, mainWindowHeight = 600;
-       private int margin = 15;
-       private int leftPanelWidth = 200, profilePanelHeight = 120, trainingAvailablePanelHeight = 174;
-       private int profilePanelYPos = 50, trainingAvailablePanelYPos = 175;
-       private int createProfileYPos = 140, selectProfileYPos = 110;
-       private int createTrainigYPos = 260, selectTrainigYPos = 210;
-       private int exerciseWidth = 350, exerciseHeight = 300, exerciseXPos = 250, exerciseYPos = 50;
+        private JPanel masterPanel, profilePanel, trainingPanel, trainignAvailablePanel, exercisePanel;
+        private JButton showPanel1, showPanel2, clearPanel, createProfile, selectProfile, createTraining, selectTraining, startTraining;
+        private JComboBox selectProfileBox;
+        private JScrollPane exerciseWindow;
+        private JLabel greetings, currentProfileLabel, currentProfileValue, currentTrainingLabel, currentTrainingValue;
+        private JTextArea profileArea;
+        private int mainWindowWidth = 620, mainWindowHeight = 600;
+        private int margin = 15;
+        private int leftPanelWidth = 200, profilePanelHeight = 120, trainingAvailablePanelHeight = 174;
+        private int profilePanelYPos = 50, trainingAvailablePanelYPos = 175;
+        private int createProfileYPos = 140, selectProfileYPos = 110;
+        private int createTrainigYPos = 260, selectTrainigYPos = 210;
+        private int exerciseWidth = 350, exerciseHeight = 300, exerciseXPos = 250, exerciseYPos = 50;
        
-       private Dimension mainWindow = new Dimension(mainWindowWidth, mainWindowHeight);
-       private static boolean seePanel1 = true, seePanel2 = true;
-       private String profileString, profileName, trainingString, trainingName;
-       private Insets noMargin = new Insets(0,0,0,0);
-       private LineBorder lineBorder = new LineBorder(Color.GRAY);
+        private Dimension mainWindow = new Dimension(mainWindowWidth, mainWindowHeight);
+        private static boolean seePanel1 = true, seePanel2 = true;
+        private String profileString, profileName, trainingString, trainingName;
+        private Insets noMargin = new Insets(0,0,0,0);
+        private LineBorder lineBorder = new LineBorder(Color.GRAY);
        
-       public MasterWindow()
-       {
-           super("SportApp");
-           setSize(mainWindow);
-           setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-           setResizable(false);
-           setLocationRelativeTo(null);
-           setLayout(null);
-           greetings = new JLabel("Сегодня отличный день для тренировки!");
-           add(greetings);
-           greetings.setLocation(15, 10);
-           greetings.setSize(mainWindowWidth-30, 30);
-           greetings.setHorizontalAlignment(JLabel.CENTER);
-           if (profileName == null) {profileName = "не выбрано"; }
-           if (trainingName == null) { trainingName = "не выбрано"; }
-           profileString = "Выбранный профиль:";
-           trainingString = "Выбранная тренировка:";
+        public MasterWindow()
+        {
+            super("SportApp");
+            setSize(mainWindow);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setResizable(false);
+            setLocationRelativeTo(null);
+            setLayout(null);
+            greetings = new JLabel("Сегодня отличный день для тренировки!");
+            add(greetings);
+            greetings.setLocation(15, 10);
+            greetings.setSize(mainWindowWidth-30, 30);
+            greetings.setHorizontalAlignment(JLabel.CENTER);
+            if (profileName == null) {profileName = "не выбрано"; }
+            if (trainingName == null) { trainingName = "не выбрано"; }
+            profileString = "Выбранный профиль:";
+            trainingString = "Выбранная тренировка:";
                    
 // ===================================================================
 //                        панель Профиля
 // ===================================================================
            
-           profilePanel = new JPanel();
-           add(profilePanel);
-           profilePanel.setLayout(null);
-           profilePanel.setSize(leftPanelWidth, profilePanelHeight);
-           profilePanel.setLocation(margin, profilePanelYPos);
-           profilePanel.setBorder(lineBorder);
+            profilePanel = new JPanel();
+            add(profilePanel);
+            profilePanel.setLayout(null);
+            profilePanel.setSize(leftPanelWidth, profilePanelHeight);
+            profilePanel.setLocation(margin, profilePanelYPos);
+            profilePanel.setBorder(lineBorder);
            
-           currentProfileLabel = new JLabel(profileString);
-           profilePanel.add(currentProfileLabel);
-           currentProfileLabel.setSize((leftPanelWidth - 10), 20);
-           currentProfileLabel.setLocation(5, 5);
-//           currentProfileLabel.setBorder(lineBorder);
-           currentProfileLabel.setHorizontalAlignment(JLabel.CENTER);
+            currentProfileLabel = new JLabel(profileString);
+            profilePanel.add(currentProfileLabel);
+            currentProfileLabel.setSize((leftPanelWidth - 10), 20);
+            currentProfileLabel.setLocation(5, 5);
+//            currentProfileLabel.setBorder(lineBorder);
+            currentProfileLabel.setHorizontalAlignment(JLabel.CENTER);
            
-           currentProfileValue = new JLabel(profileName);
-           profilePanel.add(currentProfileValue);
-           currentProfileValue.setSize((leftPanelWidth - 10), 30);
-           currentProfileValue.setLocation(5, 25);
-           currentProfileValue.setBorder(lineBorder);
-           currentProfileValue.setHorizontalAlignment(JLabel.CENTER);
+            currentProfileValue = new JLabel(profileName);
+            profilePanel.add(currentProfileValue);
+            currentProfileValue.setSize((leftPanelWidth - 10), 30);
+            currentProfileValue.setLocation(5, 25);
+            currentProfileValue.setBorder(lineBorder);
+            currentProfileValue.setHorizontalAlignment(JLabel.CENTER);
 
 // ===================================================================
 //                  Кнопки работы с профилями
@@ -119,18 +119,18 @@ public class MasterWindow extends JFrame {
             trainignAvailablePanel.setBorder(lineBorder);
            
             currentTrainingLabel = new JLabel(trainingString);
-           trainignAvailablePanel.add(currentTrainingLabel);
-           currentTrainingLabel.setSize((leftPanelWidth - 10), 20);
-           currentTrainingLabel.setLocation(5, 5);
+            trainignAvailablePanel.add(currentTrainingLabel);
+            currentTrainingLabel.setSize((leftPanelWidth - 10), 20);
+            currentTrainingLabel.setLocation(5, 5);
 //           currentProfileLabel.setBorder(lineBorder);
-           currentTrainingLabel.setHorizontalAlignment(JLabel.CENTER);
+            currentTrainingLabel.setHorizontalAlignment(JLabel.CENTER);
            
-           currentTrainingValue = new JLabel(trainingName);
-           trainignAvailablePanel.add(currentTrainingValue);
-           currentTrainingValue.setSize((leftPanelWidth - 10), 30);
-           currentTrainingValue.setLocation(5, 25);
-           currentTrainingValue.setBorder(lineBorder);
-           currentTrainingValue.setHorizontalAlignment(JLabel.CENTER);
+            currentTrainingValue = new JLabel(trainingName);
+            trainignAvailablePanel.add(currentTrainingValue);
+            currentTrainingValue.setSize((leftPanelWidth - 10), 30);
+            currentTrainingValue.setLocation(5, 25);
+            currentTrainingValue.setBorder(lineBorder);
+            currentTrainingValue.setHorizontalAlignment(JLabel.CENTER);
 // ===================================================================
 //                  Кнопки работы с тренировками
 // ===================================================================
@@ -154,13 +154,11 @@ public class MasterWindow extends JFrame {
 // ===================================================================
 //                 панель текущего упражнения
 // ===================================================================
-            exercisePanel = new Exercise(5, "Присед",30,8);
-            exerciseWindow = new JScrollPane(exercisePanel);
-           
-            add(exerciseWindow);
-            exerciseWindow.setSize(exerciseWidth, exerciseHeight);
-            exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
-            exerciseWindow.createVerticalScrollBar();
+//            exercisePanel = new Exercise(5, "Присед",30,8);
+//            exerciseWindow = new JScrollPane(exercisePanel);
+//            add(exerciseWindow);
+//            exerciseWindow.setSize(exerciseWidth, exerciseHeight);
+//            exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
             
 //            String test = String.valueOf(exercisePanel.getHeight()) + "  " + String.valueOf(exerciseWindow.getHeight());
 //            currentProfileValue.setText(System.getProperty("user.home"));
@@ -174,30 +172,92 @@ public class MasterWindow extends JFrame {
 //            test2.setLocation(420,120);
 //            test2.setVisible(seePanel2);
 //           
-//            showPanel1 = new JButton("Show panel1");
-//            this.add(showPanel1);
-//            showPanel1.setSize(130, 30);
-//            showPanel1.setLocation(135, 60);
-//            showPanel1.addActionListener(new ActionListener()
-//            {
-//                @Override
-//                public void actionPerformed(ActionEvent e) {
-//                   seePanel1 = !seePanel1;
-//                   test1.setVisible(seePanel1);
-//               }
-//           });
+            showPanel1 = new JButton("Show panel1");
+            add(showPanel1);
+            showPanel1.setSize(130, 30);
+            showPanel1.setLocation(130, 400);
+            showPanel1.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                    if (exerciseWindow != null) 
+                    { 
+                        remove(exerciseWindow);
+                        exerciseWindow = null;
+                    }
+                    if (exercisePanel != null) 
+                    { 
+                        remove(exercisePanel);
+                        exercisePanel = null;
+                    }
+                    exercisePanel = new Exercise(5, "Присед");
+                    exerciseWindow = new JScrollPane(exercisePanel);
+                    
+                    add(exerciseWindow);
+                    exerciseWindow.setSize(exerciseWidth, exerciseHeight);
+                    exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+                    validate();
+                    repaint();
+                }
+           });
 //           
-//           showPanel2 = new JButton("Show panel2");
-//           this.add(showPanel2);
-//           showPanel2.setSize(130, 30);
-//           showPanel2.setLocation(505, 60);
-//           showPanel2.addActionListener(new ActionListener()
-//           {
-//               @Override
-//               public void actionPerformed(ActionEvent e) {
-//                   seePanel2 = !seePanel2;
-//                   test2.setVisible(seePanel2);
-//               }
-//           });
+           showPanel2 = new JButton("Show panel2");
+           add(showPanel2);
+           showPanel2.setSize(130, 30);
+           showPanel2.setLocation(400, 400);
+           showPanel2.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (exerciseWindow != null) 
+                    { 
+                        remove(exerciseWindow);
+                        exerciseWindow = null;
+                    }
+                    if (exercisePanel != null) 
+                    { 
+                        remove(exercisePanel);
+                        exercisePanel = null;
+                    }
+
+                    exercisePanel = new Exercise(5, "Присед",10,8);
+                    exerciseWindow = new JScrollPane(exercisePanel);
+                    add(exerciseWindow);
+                    exerciseWindow.setSize(exerciseWidth, exerciseHeight);
+                    exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+                    validate();
+                    repaint();
+                }
+           });
+           
+           clearPanel = new JButton("CLEAR");
+           add(clearPanel);
+           clearPanel.setSize(130, 30);
+           clearPanel.setLocation(265, 400);
+           clearPanel.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (exerciseWindow != null) 
+                    { 
+                        remove(exerciseWindow);
+                        exerciseWindow = null;
+                    }
+                    if (exercisePanel != null) 
+                    { 
+                        remove(exercisePanel);
+                        exercisePanel = null;
+                    }
+//
+//                    exercisePanel = new Exercise(5, "Присед",10,8);
+//                    exerciseWindow = new JScrollPane(exercisePanel);
+//                    add(exerciseWindow);
+//                    exerciseWindow.setSize(exerciseWidth, exerciseHeight);
+//                    exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+                    validate();
+                    repaint();
+                }
+           });
        }
 }
