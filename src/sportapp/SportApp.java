@@ -24,18 +24,6 @@ public class SportApp {
         
         MasterWindow startProgramm = new MasterWindow();
         startProgramm.setVisible(true);
-//        Training ololo = new Training();
-//        ololo.setVisible(true);
-//        Exercise yoba = new Exercise(5, "qqq");
-//        yoba.setVisible(true);
-//        String s = System.getProperty("file.separator");
-//        File roots = new File("D:\\Photo");
-//        File[] mam = File.listRoots();
-//        
-//        for (File qqq : mam) {
-//            System.out.println(qqq.toString());
-//        }
-//        FileSystemSaver dniwe = new FileSystemSaver();
-//        dniwe.setVisible(true);
+
     }
 }

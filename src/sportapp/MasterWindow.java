@@ -30,21 +30,22 @@ import java.awt.event.ActionListener;
  */
 public class MasterWindow extends JFrame {
        private JPanel masterPanel, profilePanel, trainingPanel, trainignAvailablePanel, exercisePanel;
-       private JButton showPanel1, showPanel2, newProfile, selectProfile, createTraining, selectTraining;
+       private JButton showPanel1, showPanel2, createProfile, selectProfile, createTraining, selectTraining, startTraining;
        private JComboBox selectProfileBox;
        private JScrollPane exerciseWindow;
-       private JLabel greetings, currentProfileLabel, currentProfileValue;
+       private JLabel greetings, currentProfileLabel, currentProfileValue, currentTrainingLabel, currentTrainingValue;
        private JTextArea profileArea;
-       private int mainWindowWidth = 650, mainWindowHeight = 600;
+       private int mainWindowWidth = 620, mainWindowHeight = 600;
        private int margin = 15;
-       private int leftPanelWidth = 200, trainingAvailablePanelHeight = 80, profilePanelHeight = 55;
-       private int trainingAvailablePanelYPos = 200, profilePanelYPos = 50;
-       private int newProfileYPos = 140, selectProfileYPos = 110;
+       private int leftPanelWidth = 200, profilePanelHeight = 120, trainingAvailablePanelHeight = 174;
+       private int profilePanelYPos = 50, trainingAvailablePanelYPos = 175;
+       private int createProfileYPos = 140, selectProfileYPos = 110;
+       private int createTrainigYPos = 260, selectTrainigYPos = 210;
        private int exerciseWidth = 350, exerciseHeight = 300, exerciseXPos = 250, exerciseYPos = 50;
        
        private Dimension mainWindow = new Dimension(mainWindowWidth, mainWindowHeight);
        private static boolean seePanel1 = true, seePanel2 = true;
-       private String profileString, profileName;
+       private String profileString, profileName, trainingString, trainingName;
        private Insets noMargin = new Insets(0,0,0,0);
        private LineBorder lineBorder = new LineBorder(Color.GRAY);
        
@@ -58,13 +59,14 @@ public class MasterWindow extends JFrame {
            setLayout(null);
            greetings = new JLabel("Сегодня отличный день для тренировки!");
            add(greetings);
-           greetings.setLocation(15, 0);
+           greetings.setLocation(15, 10);
            greetings.setSize(mainWindowWidth-30, 30);
            greetings.setHorizontalAlignment(JLabel.CENTER);
            if (profileName == null) {profileName = "не выбрано"; }
-          
-           profileString = "Выбранный профиль: ";
-           
+           if (trainingName == null) { trainingName = "не выбрано"; }
+           profileString = "Выбранный профиль:";
+           trainingString = "Выбранная тренировка:";
+                   
 // ===================================================================
 //                        панель Профиля
 // ===================================================================
@@ -85,7 +87,7 @@ public class MasterWindow extends JFrame {
            
            currentProfileValue = new JLabel(profileName);
            profilePanel.add(currentProfileValue);
-           currentProfileValue.setSize((leftPanelWidth - 10), 25);
+           currentProfileValue.setSize((leftPanelWidth - 10), 30);
            currentProfileValue.setLocation(5, 25);
            currentProfileValue.setBorder(lineBorder);
            currentProfileValue.setHorizontalAlignment(JLabel.CENTER);
@@ -94,15 +96,17 @@ public class MasterWindow extends JFrame {
 //                  Кнопки работы с профилями
 // ===================================================================
             selectProfile = new JButton("Выбрать профиль");
-            newProfile = new JButton("Создать профиль");
+            createProfile = new JButton("Создать профиль");
             
-            add(selectProfile);
-            selectProfile.setSize(leftPanelWidth, 25);
-            selectProfile.setLocation(margin, selectProfileYPos);
+            profilePanel.add(selectProfile);
+            selectProfile.setSize(leftPanelWidth-10, 25);
+//            selectProfile.setLocation(margin, selectProfileYPos);
+            selectProfile.setLocation(5, 60);
             
-            add(newProfile);
-            newProfile.setSize(leftPanelWidth, 25);
-            newProfile.setLocation(margin, newProfileYPos);
+            profilePanel.add(createProfile);
+            createProfile.setSize(leftPanelWidth-10, 25);
+//            createProfile.setLocation(margin, createProfileYPos);
+            createProfile.setLocation(5, 90);
 
 // ===================================================================
 //                 панель Выбора Тренировки
@@ -115,9 +119,41 @@ public class MasterWindow extends JFrame {
             trainignAvailablePanel.setLocation(margin, trainingAvailablePanelYPos);
             trainignAvailablePanel.setBorder(lineBorder);
            
+            currentTrainingLabel = new JLabel(trainingString);
+           trainignAvailablePanel.add(currentTrainingLabel);
+           currentTrainingLabel.setSize((leftPanelWidth - 10), 20);
+           currentTrainingLabel.setLocation(5, 5);
+//           currentProfileLabel.setBorder(lineBorder);
+           currentTrainingLabel.setHorizontalAlignment(JLabel.CENTER);
            
+           currentTrainingValue = new JLabel(trainingName);
+           trainignAvailablePanel.add(currentTrainingValue);
+           currentTrainingValue.setSize((leftPanelWidth - 10), 30);
+           currentTrainingValue.setLocation(5, 25);
+           currentTrainingValue.setBorder(lineBorder);
+           currentTrainingValue.setHorizontalAlignment(JLabel.CENTER);
 // ===================================================================
-//                 панель Выбора Тренировки
+//                  Кнопки работы с тренировками
+// ===================================================================
+            
+            selectTraining = new JButton("Выбрать тренировку");
+            createTraining = new JButton("Создать тренировку");
+            startTraining = new JButton("Начать тренировку");
+            
+            trainignAvailablePanel.add(selectTraining);
+            selectTraining.setSize(leftPanelWidth-10, 25);
+            selectTraining.setLocation(5, 60);
+            
+            trainignAvailablePanel.add(createTraining);
+            createTraining.setSize(leftPanelWidth-10, 25);
+            createTraining.setLocation(5, 90);
+            
+            trainignAvailablePanel.add(startTraining);
+            startTraining.setSize(leftPanelWidth-10, 50);
+            startTraining.setLocation(5, 120);
+
+// ===================================================================
+//                 панель текущего упражнения
 // ===================================================================
             exercisePanel = new Exercise(5, "Присед",30,8);
             exerciseWindow = new JScrollPane(exercisePanel);
