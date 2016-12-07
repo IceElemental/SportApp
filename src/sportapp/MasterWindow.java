@@ -28,20 +28,22 @@ import java.awt.event.ActionListener;
  * @author VMS
  */
 public class MasterWindow extends JFrame {
-        private JPanel masterPanel, profilePanel, trainingPanel, trainignAvailablePanel, exercisePanel;
-        private JButton showPanel1, showPanel2, clearPanel, manageTraining, manageProfile, createProfile, selectProfile, createTraining, selectTraining, startTraining;
-        private JComboBox selectProfileBox;
-        private JScrollPane exerciseWindow;
-        private JLabel greetings, currentProfileLabel, currentProfileValue, currentTrainingLabel, currentTrainingValue;
-        private JTextArea profileArea;
-        private int mainWindowWidth = 620, mainWindowHeight = 600;
-        private int margin = 15;
-        private int leftPanelWidth = 210, profilePanelHeight = 110, trainingAvailablePanelHeight = 160;
-        private int profilePanelYPos = 50, trainingAvailablePanelYPos = 189;
-        private int createProfileYPos = 140, selectProfileYPos = 110;
-        private int createTrainigYPos = 260, selectTrainigYPos = 210;
-        private int exerciseWidth = 350, exerciseHeight = 300, exerciseXPos = 250, exerciseYPos = 50;
+        private static JFrame mainFrame;
+        private static JPanel masterPanel, profilePanel, trainingPanel, trainignAvailablePanel, exercisePanel;
+        private static JButton showPanel1, showPanel2, clearPanel, manageTraining, manageProfile, createProfile, selectProfile, createTraining, selectTraining, startTraining;
+        private static JComboBox selectProfileBox;
+        private static JScrollPane exerciseWindow;
+        private static JLabel greetings, currentProfileLabel, currentProfileValue, currentTrainingLabel, currentTrainingValue;
+        private static JTextArea profileArea;
+        private static int mainWindowWidth = 620, mainWindowHeight = 600;
+        private static int margin = 15;
+        private static int leftPanelWidth = 210, profilePanelHeight = 110, trainingAvailablePanelHeight = 160;
+        private static int profilePanelYPos = 50, trainingAvailablePanelYPos = 189;
+        private static int createProfileYPos = 140, selectProfileYPos = 110;
+        private static int createTrainigYPos = 260, selectTrainigYPos = 210;
+        private static int exerciseWidth = 350, exerciseHeight = 300, exerciseXPos = 250, exerciseYPos = 50;
        
+        private ButtonListener buttonchik = new ButtonListener();
         private Dimension mainWindow = new Dimension(mainWindowWidth, mainWindowHeight);
         private static boolean seePanel1 = true, seePanel2 = true;
         private String profileString, profileName, trainingString, trainingName;
@@ -51,6 +53,7 @@ public class MasterWindow extends JFrame {
         public MasterWindow()
         {
             super("SportApp");
+            mainFrame = this;
             setSize(mainWindow);
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setResizable(false);
@@ -175,106 +178,88 @@ public class MasterWindow extends JFrame {
             exerciseWindow.setSize(exerciseWidth, exerciseHeight);
             exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
             
-//            String test = String.valueOf(exercisePanel.getHeight()) + "  " + String.valueOf(exerciseWindow.getHeight());
-//            currentProfileValue.setText(System.getProperty("user.home"));
-//            JPanel test1 = new TestPanel("Панель 1");
-//            this.add(test1);
-//            test1.setLocation(50,120);
-//            test1.setVisible(seePanel1);
-//                      
-//            JPanel test2 = new TestPanel("Панель 2");
-//            this.add(test2);
-//            test2.setLocation(420,120);
-//            test2.setVisible(seePanel2);
-//           
             showPanel1 = new JButton("Show panel1");
             add(showPanel1);
             showPanel1.setSize(130, 30);
             showPanel1.setLocation(130, 400);
-            showPanel1.addActionListener(new ActionListener()
-            {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-
-                    if (exerciseWindow != null) 
-                    { 
-                        remove(exerciseWindow);
-                        exerciseWindow = null;
-                    }
-                    if (exercisePanel != null) 
-                    { 
-                        remove(exercisePanel);
-                        exercisePanel = null;
-                    }
-                    exercisePanel = new Exercise(5, "Присед");
-                    exerciseWindow = new JScrollPane(exercisePanel);
-                    
-                    add(exerciseWindow);
-                    exerciseWindow.setSize(exerciseWidth, exerciseHeight);
-                    exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
-                    validate();
-                    repaint();
-                }
-           });
-//           
-           showPanel2 = new JButton("Show panel2");
-           add(showPanel2);
-           showPanel2.setSize(130, 30);
-           showPanel2.setLocation(400, 400);
-           showPanel2.addActionListener(new ActionListener()
-            {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (exerciseWindow != null) 
-                    { 
-                        remove(exerciseWindow);
-                        exerciseWindow = null;
-                    }
-                    if (exercisePanel != null) 
-                    { 
-                        remove(exercisePanel);
-                        exercisePanel = null;
-                    }
-
-                    exercisePanel = new Exercise(5, "Присед",10,8);
-                    exerciseWindow = new JScrollPane(exercisePanel);
-                    add(exerciseWindow);
-                    exerciseWindow.setSize(exerciseWidth, exerciseHeight);
-                    exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
-                    validate();
-                    repaint();
-                }
-           });
+            showPanel1.addActionListener(buttonchik);
+            
+            showPanel2 = new JButton("Show panel2");
+            add(showPanel2);
+            showPanel2.setSize(130, 30);
+            showPanel2.setLocation(400, 400);
+            showPanel2.addActionListener(buttonchik);
            
-           clearPanel = new JButton("CLEAR");
-           add(clearPanel);
-           clearPanel.setSize(130, 30);
-           clearPanel.setLocation(265, 400);
-           clearPanel.addActionListener(new ActionListener()
-            {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (exerciseWindow != null) 
-                    { 
-                        remove(exerciseWindow);
-                        exerciseWindow = null;
-                    }
+            clearPanel = new JButton("CLEAR");
+            add(clearPanel);
+            clearPanel.setSize(130, 30);
+            clearPanel.setLocation(265, 400);
+            clearPanel.addActionListener(buttonchik);
+        }
+        private static class ButtonListener implements ActionListener
+        {
 
-                    if (exercisePanel != null) 
-                    { 
-                        remove(exercisePanel);
-                        exercisePanel = null;
-                    }
-//
-//                    exercisePanel = new Exercise(5, "Присед",10,8);
-                    exerciseWindow = new JScrollPane();
-                    add(exerciseWindow);
-                    exerciseWindow.setSize(exerciseWidth, exerciseHeight);
-                    exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
-                    
-                    validate();
-                    repaint();
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == showPanel1)
+            {
+                if (exerciseWindow != null) 
+                { 
+                    mainFrame.remove(exerciseWindow);
+                    exerciseWindow = null;
                 }
-           });
-       }
+                if (exercisePanel != null) 
+                { 
+                    mainFrame.remove(exercisePanel);
+                    exercisePanel = null;
+                }
+                exercisePanel = new Exercise(5, "Присед");
+                exerciseWindow = new JScrollPane(exercisePanel);
+                mainFrame.add(exerciseWindow);
+                exerciseWindow.setSize(exerciseWidth, exerciseHeight);
+                exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+                mainFrame.validate();
+                mainFrame.repaint();
+            }
+            if (e.getSource() == showPanel2)
+            {
+                if (exerciseWindow != null) 
+                { 
+                    mainFrame.remove(exerciseWindow);
+                    exerciseWindow = null;
+                }
+                if (exercisePanel != null)
+                {
+                    mainFrame.remove(exercisePanel);
+                    exercisePanel = null;
+                }
+                exercisePanel = new Exercise(5, "Присед",10,8);
+                exerciseWindow = new JScrollPane(exercisePanel);
+                mainFrame.add(exerciseWindow);
+                exerciseWindow.setSize(exerciseWidth, exerciseHeight);
+                exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+                mainFrame.validate();
+                mainFrame.repaint();
+            }
+            if (e.getSource() == clearPanel)
+            {
+                if (exerciseWindow != null)
+                {
+                    mainFrame.remove(exerciseWindow);
+                    exerciseWindow = null;
+                }
+                if (exercisePanel != null)
+                {
+                    mainFrame.remove(exercisePanel);
+                    exercisePanel = null;
+                }
+                exerciseWindow = new JScrollPane();
+                mainFrame.add(exerciseWindow);
+                exerciseWindow.setSize(exerciseWidth, exerciseHeight);
+                exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+                mainFrame.validate();
+                mainFrame.repaint();
+            }
+        }
+    }
 }
