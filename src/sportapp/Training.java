@@ -17,7 +17,7 @@ public class Training extends JFrame {
     private JPanel trainPanel, fffuPanel;
     private JButton close;    
     
-    public Training()
+    protected Training()
     {
         super("Вротмненоги");
         this.setSize(600,600);

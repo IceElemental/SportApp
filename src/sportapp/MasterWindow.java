@@ -29,13 +29,15 @@ import java.awt.event.ActionListener;
  */
 public class MasterWindow extends JFrame {
         private static JFrame mainFrame;
+        private static ProfileManager profileManagerPanel;
+        private static TrainingManager trainingManagerPanel;
         private static JPanel masterPanel, profilePanel, trainingPanel, trainignAvailablePanel, exercisePanel;
         private static JButton showPanel1, showPanel2, clearPanel, manageTraining, manageProfile, createProfile, selectProfile, createTraining, selectTraining, startTraining;
         private static JComboBox selectProfileBox;
         private static JScrollPane exerciseWindow;
         private static JLabel greetings, currentProfileLabel, currentProfileValue, currentTrainingLabel, currentTrainingValue;
         private static JTextArea profileArea;
-        private static int mainWindowWidth = 620, mainWindowHeight = 600;
+        private static int mainWindowWidth = 620, mainWindowHeight = 500;
         private static int margin = 15;
         private static int leftPanelWidth = 210, profilePanelHeight = 110, trainingAvailablePanelHeight = 160;
         private static int profilePanelYPos = 50, trainingAvailablePanelYPos = 189;
@@ -84,7 +86,6 @@ public class MasterWindow extends JFrame {
             profilePanel.add(currentProfileLabel);
             currentProfileLabel.setSize((leftPanelWidth - 10), 20);
             currentProfileLabel.setLocation(5, 5);
-//            currentProfileLabel.setBorder(lineBorder);
             currentProfileLabel.setHorizontalAlignment(JLabel.CENTER);
            
             currentProfileValue = new JLabel(profileName);
@@ -236,7 +237,7 @@ public class MasterWindow extends JFrame {
                     mainFrame.remove(exercisePanel);
                     exercisePanel = null;
                 }
-                exercisePanel = new Exercise(5, "Присед",10,8);
+                exercisePanel = new Exercise(1, "Присед",10,8);
                 exerciseWindow = new JScrollPane(exercisePanel);
                 mainFrame.add(exerciseWindow);
                 exerciseWindow.setSize(exerciseWidth, exerciseHeight);
@@ -251,11 +252,11 @@ public class MasterWindow extends JFrame {
                     mainFrame.remove(exerciseWindow);
                     exerciseWindow = null;
                 }
-                if (exercisePanel != null)
-                {
-                    mainFrame.remove(exercisePanel);
-                    exercisePanel = null;
-                }
+//                if (exercisePanel != null)
+//                {
+//                    mainFrame.remove(exercisePanel);
+//                    exercisePanel = null;
+//                }
                 exerciseWindow = new JScrollPane();
                 mainFrame.add(exerciseWindow);
                 exerciseWindow.setSize(exerciseWidth, exerciseHeight);
@@ -263,6 +264,7 @@ public class MasterWindow extends JFrame {
                 mainFrame.validate();
                 mainFrame.repaint();
             }
+            // Упраление профилями
             if (e.getSource() == manageProfile)
             {
                 profileManagerWorking = !profileManagerWorking;
@@ -271,32 +273,74 @@ public class MasterWindow extends JFrame {
                 {
                     manageTraining.setEnabled(false);
                     startTraining.setEnabled(false);
-                    currentProfileValue.setText("НАЖАЛ");
+                    if (exerciseWindow != null)
+                    {
+                        mainFrame.remove(exerciseWindow);
+                        exerciseWindow = null;
+                    }
+                    profileManagerPanel = new ProfileManager();
+                    exerciseWindow = new JScrollPane(profileManagerPanel);
+                    mainFrame.add(exerciseWindow);
+                    exerciseWindow.setSize(exerciseWidth, exerciseHeight);
+                    exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+                    mainFrame.validate();
+                    mainFrame.repaint();
+//                    currentProfileValue.setText("НАЖАЛ");
                 }
                 if (profileManagerWorking == false)
                 {
                     manageTraining.setEnabled(true);
                     startTraining.setEnabled(true);
-                    currentProfileValue.setText("ОТЖАЛ");
+                    
+                    currentProfileValue.setText(profileManagerPanel.getCurrentProfile());
+                    if (exerciseWindow != null)
+                    {
+                        mainFrame.remove(exerciseWindow);
+                        exerciseWindow = null;
+                    }
+                    profileManagerPanel = null;
+                    mainFrame.validate();
+                    mainFrame.repaint();
+//                    currentProfileValue.setText("ОТЖАЛ");
                 }
             }
+            // Управление тренировками
             if (e.getSource() == manageTraining)
             {
                 trainingManagerWorking = !trainingManagerWorking;
-//                currentProfileLabel.setText("НАЖАЛ");
                 if (trainingManagerWorking == true)
                 {
                     manageProfile.setEnabled(false);
                     startTraining.setEnabled(false);
-                    currentProfileValue.setText("НАЖАЛ");
+                    if (exerciseWindow != null)
+                    {
+                        mainFrame.remove(exerciseWindow);
+                        exerciseWindow = null;
+                    }
+                    trainingManagerPanel = new TrainingManager();
+                    exerciseWindow = new JScrollPane(trainingManagerPanel);
+                    mainFrame.add(exerciseWindow);
+                    exerciseWindow.setSize(exerciseWidth, exerciseHeight);
+                    exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+                    mainFrame.validate();
+                    mainFrame.repaint();
                 }
                 if (trainingManagerWorking == false)
                 {
                     manageProfile.setEnabled(true);
                     startTraining.setEnabled(true);
-                    currentProfileValue.setText("ОТЖАЛ");
+                    currentTrainingValue.setText(trainingManagerPanel.getCurrentTraining());
+                    if (exerciseWindow != null)
+                    {
+                        mainFrame.remove(exerciseWindow);
+                        exerciseWindow = null;
+                    }
+                    trainingManagerPanel = null;
+                    mainFrame.validate();
+                    mainFrame.repaint();
                 }
             }
+            // Сама тренировка
             if (e.getSource() == startTraining)
             {
                 trainingStarted = !trainingStarted;
@@ -305,12 +349,14 @@ public class MasterWindow extends JFrame {
                     manageProfile.setEnabled(false);
                     manageTraining.setEnabled(false);
                     currentProfileValue.setText("НАЖАЛ");
+                    currentTrainingValue.setText("НАЖАЛ");
                 }
                 if (trainingStarted == false)
                 {
                     manageProfile.setEnabled(true);
                     manageTraining.setEnabled(true);
                     currentProfileValue.setText("ОТЖАЛ");
+                    currentTrainingValue.setText("ОТЖАЛ");
                 }
             }
         }

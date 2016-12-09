@@ -36,7 +36,7 @@ public class Exercise extends JPanel {
     private static String currDate = makeDate.format(today);
     private static boolean saved;
     
-    public Exercise(int number, String name)
+    protected Exercise(int number, String name)
     {
 //        super(name);
         panel = this;
