@@ -98,6 +98,7 @@ public class MasterWindow extends JFrame {
 // ===================================================================
 //                  Кнопки работы с профилями
 // ===================================================================
+
             manageProfile = new JButton("Управление профилями");
             profilePanel.add(manageProfile);
             manageProfile.setSize(leftPanelWidth-10, 45);
@@ -146,6 +147,7 @@ public class MasterWindow extends JFrame {
             currentTrainingValue.setLocation(5, 25);
             currentTrainingValue.setBorder(lineBorder);
             currentTrainingValue.setHorizontalAlignment(JLabel.CENTER);
+            
 // ===================================================================
 //                  Кнопки работы с тренировками
 // ===================================================================
@@ -176,6 +178,7 @@ public class MasterWindow extends JFrame {
 // ===================================================================
 //                 панель текущего упражнения
 // ===================================================================
+
 //            exercisePanel = new Exercise(5, "Присед",30,8);
             exerciseWindow = new JScrollPane();
             add(exerciseWindow);
