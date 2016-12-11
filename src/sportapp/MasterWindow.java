@@ -297,6 +297,7 @@ public class MasterWindow extends JFrame {
                             bufferTrainingDir.mkdirs();
                         }
                     }
+                    else { trainingAvailable = false; } 
                     manageTraining.setEnabled(trainingAvailable);
                     startTraining.setEnabled(trainingAvailable);
                     

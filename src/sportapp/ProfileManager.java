@@ -56,7 +56,7 @@ public class ProfileManager extends JPanel{
     {
         super();
         
-        if ( profileName == null ) { profileName = "не выбрано"; }
+        profileName = "не выбрано";
         
         ProfileButtonListener profButtonListener = new ProfileButtonListener();
         
@@ -110,7 +110,7 @@ public class ProfileManager extends JPanel{
             if (e.getSource() == selectProfile)
             {
                 buildProfileList();
-                profileName = (String)JOptionPane.showInputDialog(null, "Выберите профиль", "Йоло", JOptionPane.QUESTION_MESSAGE, null, bufProfileList, null);
+                profileName = (String)JOptionPane.showInputDialog(null, "Выберите профиль", "Профили", JOptionPane.QUESTION_MESSAGE, null, bufProfileList, null);
                 selectedProfile.setText(profileName);
             }
             if (e.getSource() == createProfile)
@@ -130,8 +130,29 @@ public class ProfileManager extends JPanel{
             }
             if (e.getSource() == deleteProfile)
             {
+                buildProfileList();
+                profileName = (String)JOptionPane.showInputDialog(null, "Выберите профиль", "Профили", JOptionPane.QUESTION_MESSAGE, null, bufProfileList, null);
                 
+                if (profileName != null )
+                {
+                    bufferProfile = new File((SportApp.getProfileDir().toString()).concat(System.getProperty("file.separator")).concat(profileName));
+                    deleteTheProfile(bufferProfile);
+                    bufferProfile.delete();
+                    selectedProfile.setText("не выбрано");
+                }
             }
+        }
+    }
+    private static void deleteTheProfile(File selectedProfile)
+    {
+        File[] fileList = selectedProfile.listFiles();
+        for (File buf : fileList)
+        {
+            if (buf.isDirectory())
+            {
+                deleteTheProfile(buf);
+            }
+            buf.delete();
         }
     }
 }
