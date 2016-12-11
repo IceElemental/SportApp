@@ -159,6 +159,7 @@ public class MasterWindow extends JFrame {
             add(exerciseWindow);
             exerciseWindow.setSize(exerciseWidth, exerciseHeight);
             exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+            exerciseWindow.setBorder(lineBorder);
             
             showPanel1 = new JButton("Show panel1");
             add(showPanel1);
@@ -244,6 +245,7 @@ public class MasterWindow extends JFrame {
                 mainFrame.add(exerciseWindow);
                 exerciseWindow.setSize(exerciseWidth, exerciseHeight);
                 exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+                exerciseWindow.setBorder(lineBorder);
                 mainFrame.validate();
                 mainFrame.repaint();
             }
@@ -269,6 +271,7 @@ public class MasterWindow extends JFrame {
                     mainFrame.add(exerciseWindow);
                     exerciseWindow.setSize(exerciseWidth, exerciseHeight);
                     exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+                    exerciseWindow.setBorder(lineBorder);
                     mainFrame.validate();
                     mainFrame.repaint();
 //                    currentProfileValue.setText("НАЖАЛ");
@@ -300,6 +303,11 @@ public class MasterWindow extends JFrame {
                     else { trainingAvailable = false; } 
                     manageTraining.setEnabled(trainingAvailable);
                     startTraining.setEnabled(trainingAvailable);
+                    exerciseWindow = new JScrollPane();
+                    mainFrame.add(exerciseWindow);
+                    exerciseWindow.setSize(exerciseWidth, exerciseHeight);
+                    exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+                    exerciseWindow.setBorder(lineBorder);
                     
 //                    currentProfileValue.setText("ОТЖАЛ");
                 }
@@ -325,6 +333,7 @@ public class MasterWindow extends JFrame {
                     mainFrame.add(exerciseWindow);
                     exerciseWindow.setSize(exerciseWidth, exerciseHeight);
                     exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+                    exerciseWindow.setBorder(lineBorder);
                     mainFrame.validate();
                     mainFrame.repaint();
                 }
@@ -339,6 +348,11 @@ public class MasterWindow extends JFrame {
                         exerciseWindow = null;
                     }
                     trainingManagerPanel = null;
+                    exerciseWindow = new JScrollPane();
+                    mainFrame.add(exerciseWindow);
+                    exerciseWindow.setSize(exerciseWidth, exerciseHeight);
+                    exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+                    exerciseWindow.setBorder(lineBorder);
                     mainFrame.validate();
                     mainFrame.repaint();
                 }
