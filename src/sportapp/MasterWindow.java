@@ -22,6 +22,7 @@ import java.awt.Event;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 /**
  *
@@ -47,11 +48,12 @@ public class MasterWindow extends JFrame {
        
         private ButtonListener buttonchik = new ButtonListener();
         private Dimension mainWindow = new Dimension(mainWindowWidth, mainWindowHeight);
-        private static boolean seePanel1 = true, seePanel2 = true, profileManagerWorking = false, trainingManagerWorking = false, trainingStarted = false;
+        private static boolean trainingAvailable = false, seePanel2 = true, profileManagerWorking = false, trainingManagerWorking = false, trainingStarted = false;
         private String profileString, profileName, trainingString, trainingName;
         private Insets noMargin = new Insets(0,0,0,0);
         private LineBorder lineBorder = new LineBorder(Color.GRAY);
-       
+        private File bufferProfileDir, bufferTrainingDir;
+        
         public MasterWindow()
         {
             super("SportApp");
@@ -105,24 +107,6 @@ public class MasterWindow extends JFrame {
             manageProfile.setLocation(5, 60);
             manageProfile.addActionListener(buttonchik);
 
-//            selectProfile = new JButton("Выбрать профиль");
-//            createProfile = new JButton("Создать профиль");
-            
-//            profilePanel.add(selectProfile);
-//            selectProfile.setSize(leftPanelWidth-10, 25);
-////            selectProfile.setLocation(margin, selectProfileYPos);
-//            selectProfile.setLocation(5, 60);
-            
-//            profilePanel.add(selectProfile);
-//            selectProfile.setSize(leftPanelWidth-10, 25);
-////            selectProfile.setLocation(margin, selectProfileYPos);
-//            selectProfile.setLocation(5, 60);
-//            
-//            profilePanel.add(createProfile);
-//            createProfile.setSize(leftPanelWidth-10, 25);
-////            createProfile.setLocation(margin, createProfileYPos);
-//            createProfile.setLocation(5, 90);
-
 // ===================================================================
 //                 панель Выбора Тренировки
 // ===================================================================
@@ -138,7 +122,6 @@ public class MasterWindow extends JFrame {
             trainignAvailablePanel.add(currentTrainingLabel);
             currentTrainingLabel.setSize((leftPanelWidth - 10), 20);
             currentTrainingLabel.setLocation(5, 5);
-//           currentProfileLabel.setBorder(lineBorder);
             currentTrainingLabel.setHorizontalAlignment(JLabel.CENTER);
            
             currentTrainingValue = new JLabel(trainingName);
@@ -153,8 +136,6 @@ public class MasterWindow extends JFrame {
 // ===================================================================
             
             manageTraining = new JButton("Управление тренировками");
-//            selectTraining = new JButton("Выбрать тренировку");
-//            createTraining = new JButton("Создать тренировку");
             startTraining = new JButton("Начать тренировку");
             
             
@@ -162,24 +143,18 @@ public class MasterWindow extends JFrame {
             manageTraining.setSize(leftPanelWidth-10, 40);
             manageTraining.setLocation(5, 60);
             manageTraining.addActionListener(buttonchik);
-//            trainignAvailablePanel.add(selectTraining);
-//            selectTraining.setSize(leftPanelWidth-10, 25);
-//            selectTraining.setLocation(5, 60);
-//            
-//            trainignAvailablePanel.add(createTraining);
-//            createTraining.setSize(leftPanelWidth-10, 25);
-//            createTraining.setLocation(5, 90);
-            
+            manageTraining.setEnabled(trainingAvailable);
+
             trainignAvailablePanel.add(startTraining);
             startTraining.setSize(leftPanelWidth-10, 50);
             startTraining.setLocation(5, 105);
             startTraining.addActionListener(buttonchik);
+            startTraining.setEnabled(trainingAvailable);
 
 // ===================================================================
 //                 панель текущего упражнения
 // ===================================================================
 
-//            exercisePanel = new Exercise(5, "Присед",30,8);
             exerciseWindow = new JScrollPane();
             add(exerciseWindow);
             exerciseWindow.setSize(exerciseWidth, exerciseHeight);
@@ -203,7 +178,12 @@ public class MasterWindow extends JFrame {
             clearPanel.setLocation(265, 400);
             clearPanel.addActionListener(buttonchik);
         }
-        private static class ButtonListener implements ActionListener
+        
+//========================================================================            
+//                      Обработка событий
+//========================================================================  
+        
+        public class ButtonListener implements ActionListener
         {
 
         @Override
@@ -267,7 +247,10 @@ public class MasterWindow extends JFrame {
                 mainFrame.validate();
                 mainFrame.repaint();
             }
-            // Упраление профилями
+//========================================================================            
+//                      Управление профилями
+//========================================================================
+
             if (e.getSource() == manageProfile)
             {
                 profileManagerWorking = !profileManagerWorking;
@@ -304,10 +287,26 @@ public class MasterWindow extends JFrame {
                     profileManagerPanel = null;
                     mainFrame.validate();
                     mainFrame.repaint();
+                    if ( !"не выбрано".equals(currentProfileValue.getText()) ) 
+                    {
+                        trainingAvailable = true;
+                        bufferProfileDir = SportApp.getProfileDir();
+                        bufferTrainingDir = new File((bufferProfileDir.toString()).concat(System.getProperty("file.separator")).concat(currentProfileValue.getText()).concat(System.getProperty("file.separator").concat("Trainings")));
+                        if (!bufferTrainingDir.exists())
+                        {
+                            bufferTrainingDir.mkdirs();
+                        }
+                    }
+                    manageTraining.setEnabled(trainingAvailable);
+                    startTraining.setEnabled(trainingAvailable);
+                    
 //                    currentProfileValue.setText("ОТЖАЛ");
                 }
             }
-            // Управление тренировками
+//========================================================================            
+//                      Управление тренировками
+//========================================================================
+
             if (e.getSource() == manageTraining)
             {
                 trainingManagerWorking = !trainingManagerWorking;
@@ -348,20 +347,21 @@ public class MasterWindow extends JFrame {
             {
                 trainingStarted = !trainingStarted;
                 if (trainingStarted == true)
-                {
-                    manageProfile.setEnabled(false);
-                    manageTraining.setEnabled(false);
-                    currentProfileValue.setText("НАЖАЛ");
-                    currentTrainingValue.setText("НАЖАЛ");
-                }
-                if (trainingStarted == false)
-                {
-                    manageProfile.setEnabled(true);
-                    manageTraining.setEnabled(true);
-                    currentProfileValue.setText("ОТЖАЛ");
-                    currentTrainingValue.setText("ОТЖАЛ");
-                }
+            {
+                manageProfile.setEnabled(false);
+                manageTraining.setEnabled(false);
+                currentProfileValue.setText("НАЖАЛ");
+                currentTrainingValue.setText("НАЖАЛ");
+            }
+            if (trainingStarted == false)
+            {
+                manageProfile.setEnabled(true);
+                manageTraining.setEnabled(true);
+                currentProfileValue.setText("ОТЖАЛ");
+                currentTrainingValue.setText("ОТЖАЛ");
             }
         }
     }
+}
+
 }

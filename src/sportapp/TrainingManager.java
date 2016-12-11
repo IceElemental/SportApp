@@ -22,15 +22,18 @@ public class TrainingManager extends JPanel{
     private static JPanel profileTraining;
     private static int margin = 15, componentHeight = 30, componentWidth = 200, width = 200, height = 250, paddingLeft = 60, paddingTop = 40;
     private static LineBorder lineBorder = new LineBorder(Color.DARK_GRAY);
+    private static String trainingName;
     
     protected TrainingManager()
     {
         super();
+        if ( trainingName == null ) { trainingName = "не выбрано"; }
+        
         profileTraining = this;
         profileTraining.setLayout(null);
         profileTraining.setPreferredSize(new Dimension(width,height));
         
-        selectedTraining = new JLabel("Kurva training");
+        selectedTraining = new JLabel(trainingName);
         profileTraining.add(selectedTraining);
         selectedTraining.setSize(componentWidth, componentHeight);
         selectedTraining.setLocation(paddingLeft + margin, paddingTop + margin);
