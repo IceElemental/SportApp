@@ -6,6 +6,7 @@
 package sportapp;
 
 import java.io.File;
+import java.io.IOException;
 //import java.io.IOException;
 //import javax.swing.filechooser.FileSystemView;
 //import static java.lang.Thread.sleep;
@@ -19,21 +20,33 @@ import java.io.File;
 public class SportApp {
     
    
-        //File workingDir = new File(System.getProperty("user.dir"));
-//        private static String trainingDirString =  System.getProperty("user.dir").concat(System.getProperty("file.separator").concat("Trainings"));
+        File workingDir = new File(System.getProperty("user.dir"));
+        private static String trainingDirString =  System.getProperty("user.dir").concat(System.getProperty("file.separator").concat("Trainings"));
         private static String profileDirString =  System.getProperty("user.dir").concat(System.getProperty("file.separator").concat("Profiles"));
-//        private static File trainingDir = new File(trainingDirString);
+        private static File trainingDir = new File(trainingDirString);
+//        private static File trainingUserDir = new File(trainingDirString.concat(System.getProperty("file.separator")).concat("Users"));
+        private static File trainingBasicDir = new File(trainingDirString.concat(System.getProperty("file.separator")).concat("Basic"));
         private static File profileDir = new File(profileDirString);
         static 
         {
-//            if (!trainingDir.exists()) { trainingDir.mkdir(); }
-            if (!profileDir.exists()) { profileDir.mkdir(); }
+            if (!trainingDir.exists()) 
+            { 
+                trainingDir.mkdir(); 
+//                if (!trainingUserDir.exists())
+//                { trainingUserDir.mkdir(); }
+            }
+            if (!trainingBasicDir.exists())
+                { trainingBasicDir.mkdir(); }
+            if (!profileDir.exists()) 
+            { 
+                profileDir.mkdir(); 
+            }
         }
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         
         MasterWindow startProgramm = new MasterWindow();
         startProgramm.setVisible(true);

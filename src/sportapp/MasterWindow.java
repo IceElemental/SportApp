@@ -22,7 +22,13 @@ import java.awt.Event;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  *
@@ -53,8 +59,9 @@ public class MasterWindow extends JFrame {
         private Insets noMargin = new Insets(0,0,0,0);
         private LineBorder lineBorder = new LineBorder(Color.GRAY);
         private File bufferProfileDir, bufferTrainingDir;
+        private static String[] trainreader;
         
-        public MasterWindow()
+        public MasterWindow() throws FileNotFoundException, IOException
         {
             super("SportApp");
             mainFrame = this;
@@ -178,6 +185,14 @@ public class MasterWindow extends JFrame {
             clearPanel.setSize(130, 30);
             clearPanel.setLocation(265, 400);
             clearPanel.addActionListener(buttonchik);
+            
+            
+            File newTraining = new File("D:\\Prog\\NetBeans\\SportApp\\Profiles\\Мурзяндр\\Trainings\\001");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(newTraining))); 
+//            FileReader reader = new FileReader(newTraining);
+            String test = reader.readLine();
+            trainreader = test.split("_");
+            
         }
         
 //========================================================================            
@@ -201,7 +216,8 @@ public class MasterWindow extends JFrame {
                     mainFrame.remove(exercisePanel);
                     exercisePanel = null;
                 }
-                exercisePanel = new Exercise("Присед", 5, true);
+                exercisePanel = new Exercise(trainreader[1], Integer.parseInt(trainreader[2]), true);
+//                exercisePanel = new Exercise("www", 3, true);
                 exerciseWindow = new JScrollPane(exercisePanel);
                 mainFrame.add(exerciseWindow);
                 exerciseWindow.setSize(exerciseWidth, exerciseHeight);
