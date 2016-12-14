@@ -35,6 +35,9 @@ public class Exercise extends JPanel {
     private static SimpleDateFormat makeDate = new SimpleDateFormat("yyyy-MM-dd");
     private static String currDate = makeDate.format(today);
     private static boolean saved;
+    private static Border lightBorder = new LineBorder(Color.GRAY);
+    private static Border darkBorder = new LineBorder(Color.DARK_GRAY);
+    private static Insets inMargin = new Insets(3,3,3,3);
     
     protected Exercise(int number, String name)
     {
@@ -49,7 +52,7 @@ public class Exercise extends JPanel {
         createFields(number, name);
     }
     
-    public Exercise(int number, String name, int defaultWeight, int defaultCount)
+    protected Exercise(int number, String name, int defaultWeight, int defaultCount)
     {
         this(number, name);
         for ( int i = 0; i < number; i++)
@@ -59,12 +62,95 @@ public class Exercise extends JPanel {
         }
     }
     
+    protected Exercise(String name, int number, boolean timing)
+    {
+        panel = this;
+        saved = false;
+        height = marginTop + (sizey + spacey) * ( number + 2 ) + marginBottom;
+        width = marginLR + textSizeX + spacex + sizex * 2 + spacex + marginLR + 5;
+        setPreferredSize(new Dimension(width, height));
+        setLayout(null);
+        
+        int countXPos, YPos, textXPos;
+        textXPos = marginLR;
+//        weightXPos = marginLR + textSizeX + spacex;
+        countXPos = marginLR + textSizeX;// + spacex;// + sizex + spacex;
+        YPos = marginTop;
+        
+        trainLabel = new JLabel(name);
+//        weightLabel = new JLabel("Вес");
+        countLabel = new JLabel("Повторов");
+        
+        panel.add(trainLabel);
+        trainLabel.setSize(textSizeX, sizey);
+        trainLabel.setLocation(textXPos, YPos-5);
+        trainLabel.setHorizontalAlignment(JTextField.CENTER);
+        
+        
+//        panel.add(weightLabel);
+//        weightLabel.setSize(sizex, sizey);
+//        weightLabel.setLocation(weightXPos, YPos-5);
+//        weightLabel.setHorizontalAlignment(JTextField.CENTER);
+//        weightLabel.setBorder(lightBorder);
+        
+        panel.add(countLabel);
+        countLabel.setSize((sizex+marginLR)*2, sizey);
+        countLabel.setLocation(countXPos, YPos-5);
+        countLabel.setHorizontalAlignment(JTextField.CENTER);
+        countLabel.setBorder(lightBorder);
+        
+        YPos += spacey + sizey;
+        
+        for (int i = 0; i < number; i++)
+        {
+            countMap.put("countField".concat(String.valueOf(i)), new JTextField());
+            
+            trainFields.add(i, new JLabel("Подход №".concat(String.valueOf(i + 1)), JLabel.CENTER));
+            
+            panel.add(trainFields.get(i));
+            trainFields.get(i).setSize(textSizeX, sizey);
+            trainFields.get(i).setLocation(textXPos, YPos);
+            
+            panel.add(countMap.get("countField".concat(String.valueOf(i))));
+            countMap.get("countField".concat(String.valueOf(i))).setSize((sizex+marginLR)*2, sizey);
+            countMap.get("countField".concat(String.valueOf(i))).setLocation(countXPos, YPos);
+            countMap.get("countField".concat(String.valueOf(i))).setHorizontalAlignment(JTextField.CENTER);
+            countMap.get("countField".concat(String.valueOf(i))).setBorder(darkBorder);
+            countMap.get("countField".concat(String.valueOf(i))).setMargin(inMargin);
+            
+            YPos += spacey + sizey;
+        }
+        save = new JButton("Сохранить результаты");
+        panel.add(save);
+        save.setSize((sizex+marginLR)*2, sizey);
+        save.setLocation(countXPos, YPos+5);
+        save.setMargin(inMargin);   
+        save.addActionListener(new ActionListener() 
+        { 
+            public void actionPerformed(ActionEvent e) 
+            {
+                int countGoodFields = 0;
+                for (int i = 0; i < number; i++)
+                {
+//                        if (!"".equals(weightMap.get("weightField".concat(String.valueOf(i))).getText())) countGoodFields++;
+                    if (!"".equals(countMap.get("countField".concat(String.valueOf(i))).getText())) countGoodFields++;
+                }
+                if (countGoodFields == number)
+                {
+                    getResult(number, name);
+                    if (!saved) {
+                        JOptionPane.showMessageDialog(null, approachResult);
+                        saved = true;
+                    } else { JOptionPane.showMessageDialog(null, "Данные уже сохранены"); }
+                }
+                else { JOptionPane.showMessageDialog(null, "Заполните все поля"); }
+            }
+        });
+    }
+    
     private static void createFields(int number, String name)
     {
-        Border lightBorder = new LineBorder(Color.GRAY);
-        Border darkBorder = new LineBorder(Color.DARK_GRAY);
-        Insets inMargin = new Insets(3,3,3,3);
-        
+              
         int weightXPos, countXPos, YPos, textXPos;
         textXPos = marginLR;
         weightXPos = marginLR + textSizeX + spacex;
@@ -158,11 +244,15 @@ public class Exercise extends JPanel {
         appRes.append(" ");
         appRes.append(number);
         appRes.append(" ");
-        for (int i = 0; i < number; i++)
+        if (weightMap.size() !=0)
         {
-            appRes.append(weightMap.get("weightField".concat(String.valueOf(i))).getText());
-            appRes.append(" ");
+            for (int i = 0; i < number; i++)
+            {
+                appRes.append(weightMap.get("weightField".concat(String.valueOf(i))).getText());
+                appRes.append(" ");
+            }
         }
+        
         for (int i = 0; i < number; i++)
         {
             appRes.append(countMap.get("countField".concat(String.valueOf(i))).getText());

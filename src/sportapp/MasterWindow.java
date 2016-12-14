@@ -201,7 +201,7 @@ public class MasterWindow extends JFrame {
                     mainFrame.remove(exercisePanel);
                     exercisePanel = null;
                 }
-                exercisePanel = new Exercise(5, "Присед");
+                exercisePanel = new Exercise("Присед", 5, true);
                 exerciseWindow = new JScrollPane(exercisePanel);
                 mainFrame.add(exerciseWindow);
                 exerciseWindow.setSize(exerciseWidth, exerciseHeight);
