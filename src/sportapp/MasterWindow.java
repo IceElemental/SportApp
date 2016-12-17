@@ -191,7 +191,7 @@ public class MasterWindow extends JFrame {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(newTraining))); 
 //            FileReader reader = new FileReader(newTraining);
             String test = reader.readLine();
-            trainreader = test.split("_");
+            trainreader = test.split("!_!");
             
         }
         
@@ -237,7 +237,7 @@ public class MasterWindow extends JFrame {
                     mainFrame.remove(exercisePanel);
                     exercisePanel = null;
                 }
-                exercisePanel = new Exercise(1, "Присед",10,8);
+                exercisePanel = new Exercise(5, "Присед");
                 exerciseWindow = new JScrollPane(exercisePanel);
                 mainFrame.add(exerciseWindow);
                 exerciseWindow.setSize(exerciseWidth, exerciseHeight);

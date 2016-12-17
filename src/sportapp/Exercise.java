@@ -52,15 +52,15 @@ public class Exercise extends JPanel {
         createFields(number, name);
     }
     
-    protected Exercise(int number, String name, int defaultWeight, int defaultCount)
-    {
-        this(number, name);
-        for ( int i = 0; i < number; i++)
-        {
-            weightMap.get("weightField".concat(String.valueOf(i))).setText(String.valueOf(defaultWeight));
-            countMap.get("countField".concat(String.valueOf(i))).setText(String.valueOf(defaultCount));
-        }
-    }
+//    protected Exercise(int number, String name, int defaultWeight, int defaultCount)
+//    {
+//        this(number, name);
+//        for ( int i = 0; i < number; i++)
+//        {
+//            weightMap.get("weightField".concat(String.valueOf(i))).setText(String.valueOf(defaultWeight));
+//            countMap.get("countField".concat(String.valueOf(i))).setText(String.valueOf(defaultCount));
+//        }
+//    }
     
     protected Exercise(String name, int number, boolean timing)
     {
