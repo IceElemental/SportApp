@@ -66,7 +66,8 @@ public class TrainingManager extends JPanel {
         super();
         buildExerciseList();
         resetValues();
-        if ( trainingName == null ) { trainingName = "не выбрано"; }
+        
+        trainingName = "не выбрано";
         
         profileTraining = this;
         profileTraining.setLayout(null);
