@@ -111,7 +111,10 @@ public class ProfileManager extends JPanel{
             {
                 buildProfileList();
                 profileName = (String)JOptionPane.showInputDialog(null, "Выберите профиль", "Профили", JOptionPane.QUESTION_MESSAGE, null, bufProfileList, null);
-                selectedProfile.setText(profileName);
+                if (profileName != null) 
+                {
+                    selectedProfile.setText(profileName);
+                }
             }
             if (e.getSource() == createProfile)
             {

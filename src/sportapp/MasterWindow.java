@@ -58,7 +58,7 @@ public class MasterWindow extends JFrame {
         private String profileString, profileName, trainingString, trainingName;
         private Insets noMargin = new Insets(0,0,0,0);
         private LineBorder lineBorder = new LineBorder(Color.GRAY);
-        private File bufferProfileDir, bufferTrainingDir;
+        private static File bufferProfileDir, bufferTrainingDir;
         private static String[] trainreader;
         
         public MasterWindow() throws FileNotFoundException, IOException
@@ -191,8 +191,13 @@ public class MasterWindow extends JFrame {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(newTraining))); 
 //            FileReader reader = new FileReader(newTraining);
             String test = reader.readLine();
-            trainreader = test.split("!_!");
+            trainreader = test.split(SportApp.exSeparator);
             
+        }
+        
+        public static File getTrainingDir()
+        {
+            return bufferTrainingDir;
         }
         
 //========================================================================            
@@ -216,7 +221,7 @@ public class MasterWindow extends JFrame {
                     mainFrame.remove(exercisePanel);
                     exercisePanel = null;
                 }
-                exercisePanel = new Exercise(trainreader[1], Integer.parseInt(trainreader[2]), true);
+                exercisePanel = new Exercise(false, trainreader[1], Integer.parseInt(trainreader[2]), 1);
 //                exercisePanel = new Exercise("www", 3, true);
                 exerciseWindow = new JScrollPane(exercisePanel);
                 mainFrame.add(exerciseWindow);
@@ -237,7 +242,7 @@ public class MasterWindow extends JFrame {
                     mainFrame.remove(exercisePanel);
                     exercisePanel = null;
                 }
-                exercisePanel = new Exercise(5, "Присед");
+                exercisePanel = new Exercise(false, "Отжимания", 5, 2);
                 exerciseWindow = new JScrollPane(exercisePanel);
                 mainFrame.add(exerciseWindow);
                 exerciseWindow.setSize(exerciseWidth, exerciseHeight);
@@ -391,8 +396,7 @@ public class MasterWindow extends JFrame {
                 currentProfileValue.setText("ОТЖАЛ");
                 currentTrainingValue.setText("ОТЖАЛ");
             }
+            }
         }
     }
-}
-
 }

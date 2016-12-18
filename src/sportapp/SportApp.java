@@ -18,8 +18,6 @@ import java.io.IOException;
  * @author VMS
  */
 public class SportApp {
-    
-   
         File workingDir = new File(System.getProperty("user.dir"));
         private static String trainingDirString =  System.getProperty("user.dir").concat(System.getProperty("file.separator").concat("Trainings"));
         private static String profileDirString =  System.getProperty("user.dir").concat(System.getProperty("file.separator").concat("Profiles"));
@@ -27,13 +25,29 @@ public class SportApp {
 //        private static File trainingUserDir = new File(trainingDirString.concat(System.getProperty("file.separator")).concat("Users"));
         private static File trainingBasicDir = new File(trainingDirString.concat(System.getProperty("file.separator")).concat("Basic"));
         private static File profileDir = new File(profileDirString);
+        
+        protected static final String FREE_WEIGHT = "Тренировка с отягощением";
+        protected static final String NO_WEIGHT = "Тренировка без отягощения";
+        protected static final String TIME_TRAINING = "Тренировка на время";
+        protected static final String exSeparator = " _!_!_ ";
+        private static Object[] listExercises = new Object[3];
+    
+        static {
+            listExercises[0] = FREE_WEIGHT;
+            listExercises[1] = NO_WEIGHT;
+            listExercises[2] = TIME_TRAINING;
+        }
+        
+        protected static Object[] getExerciseList()
+        {
+            return listExercises;
+        }
+        
         static 
         {
             if (!trainingDir.exists()) 
             { 
                 trainingDir.mkdir(); 
-//                if (!trainingUserDir.exists())
-//                { trainingUserDir.mkdir(); }
             }
             if (!trainingBasicDir.exists())
                 { trainingBasicDir.mkdir(); }

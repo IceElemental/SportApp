@@ -23,7 +23,13 @@ import javax.swing.border.LineBorder;
  * @author VMS
  */
 public class Exercise extends JPanel {
-    private static int height, width, marginTop = 15, marginBottom = 20, marginLR = 20, sizex = 70, sizey = 30, spacex = 15, spacey = 5, textSizeX = 110;
+//    private static final int ADD_WEIGHT = 1;
+//    private static final int NO_WEIGHT = 2;
+//    private static final int TIME_TRAINING = 3;
+    protected static final String FREE_WEIGHT = "Тренировка с отягощением";
+    protected static final String NO_WEIGHT = "Тренировка без отягощения";
+    protected static final String TIME_TRAINING = "Тренировка на время";
+    private static int height, width, marginTop, marginBottom, marginLR, sizex, sizey, spacex, spacey, textSizeX, buttonSizeX;
     private static ArrayList<JLabel> trainFields = new ArrayList<>();
     private static HashMap<String, JTextField> weightMap = new HashMap<>();
     private static HashMap<String, JTextField> countMap = new HashMap<>();
@@ -35,13 +41,25 @@ public class Exercise extends JPanel {
     private static SimpleDateFormat makeDate = new SimpleDateFormat("yyyy-MM-dd");
     private static String currDate = makeDate.format(today);
     private static boolean saved;
+    private static boolean canGetResult;
     private static Border lightBorder = new LineBorder(Color.GRAY);
     private static Border darkBorder = new LineBorder(Color.DARK_GRAY);
     private static Insets inMargin = new Insets(3,3,3,3);
+    private static Object[] listExercises;
     
-    protected Exercise(int number, String name)
+    static {
+        Object[] listExercises = {FREE_WEIGHT, NO_WEIGHT, TIME_TRAINING};
+    }
+    
+    protected static Object[] getExerciseList()
+    {
+        return listExercises;
+    }
+    
+    protected Exercise(boolean finalExercise, String name, int number, int trainingType)
     {
 //        super(name);
+        resetValues();
         panel = this;
         saved = false;
         height = marginTop + (sizey + spacey) * ( number + 2 ) + marginBottom;
@@ -49,7 +67,7 @@ public class Exercise extends JPanel {
         setPreferredSize(new Dimension(width, height));
         setLayout(null);
         
-        createFields(number, name);
+        createFields(finalExercise, name, number, trainingType);
     }
     
 //    protected Exercise(int number, String name, int defaultWeight, int defaultCount)
@@ -62,95 +80,94 @@ public class Exercise extends JPanel {
 //        }
 //    }
     
-    protected Exercise(String name, int number, boolean timing)
-    {
-        panel = this;
-        saved = false;
-        height = marginTop + (sizey + spacey) * ( number + 2 ) + marginBottom;
-        width = marginLR + textSizeX + spacex + sizex * 2 + spacex + marginLR + 5;
-        setPreferredSize(new Dimension(width, height));
-        setLayout(null);
-        
-        int countXPos, YPos, textXPos;
-        textXPos = marginLR;
-//        weightXPos = marginLR + textSizeX + spacex;
-        countXPos = marginLR + textSizeX;// + spacex;// + sizex + spacex;
-        YPos = marginTop;
-        
-        trainLabel = new JLabel(name);
-//        weightLabel = new JLabel("Вес");
-        countLabel = new JLabel("Повторов");
-        
-        panel.add(trainLabel);
-        trainLabel.setSize(textSizeX, sizey);
-        trainLabel.setLocation(textXPos, YPos-5);
-        trainLabel.setHorizontalAlignment(JTextField.CENTER);
-        
-        
-//        panel.add(weightLabel);
-//        weightLabel.setSize(sizex, sizey);
-//        weightLabel.setLocation(weightXPos, YPos-5);
-//        weightLabel.setHorizontalAlignment(JTextField.CENTER);
-//        weightLabel.setBorder(lightBorder);
-        
-        panel.add(countLabel);
-        countLabel.setSize((sizex+marginLR)*2, sizey);
-        countLabel.setLocation(countXPos, YPos-5);
-        countLabel.setHorizontalAlignment(JTextField.CENTER);
-        countLabel.setBorder(lightBorder);
-        
-        YPos += spacey + sizey;
-        
-        for (int i = 0; i < number; i++)
-        {
-            countMap.put("countField".concat(String.valueOf(i)), new JTextField());
-            
-            trainFields.add(i, new JLabel("Подход №".concat(String.valueOf(i + 1)), JLabel.CENTER));
-            
-            panel.add(trainFields.get(i));
-            trainFields.get(i).setSize(textSizeX, sizey);
-            trainFields.get(i).setLocation(textXPos, YPos);
-            
-            panel.add(countMap.get("countField".concat(String.valueOf(i))));
-            countMap.get("countField".concat(String.valueOf(i))).setSize((sizex+marginLR)*2, sizey);
-            countMap.get("countField".concat(String.valueOf(i))).setLocation(countXPos, YPos);
-            countMap.get("countField".concat(String.valueOf(i))).setHorizontalAlignment(JTextField.CENTER);
-            countMap.get("countField".concat(String.valueOf(i))).setBorder(darkBorder);
-            countMap.get("countField".concat(String.valueOf(i))).setMargin(inMargin);
-            
-            YPos += spacey + sizey;
-        }
-        save = new JButton("Сохранить результаты");
-        panel.add(save);
-        save.setSize((sizex+marginLR)*2, sizey);
-        save.setLocation(countXPos, YPos+5);
-        save.setMargin(inMargin);   
-        save.addActionListener(new ActionListener() 
-        { 
-            public void actionPerformed(ActionEvent e) 
-            {
-                int countGoodFields = 0;
-                for (int i = 0; i < number; i++)
-                {
-//                        if (!"".equals(weightMap.get("weightField".concat(String.valueOf(i))).getText())) countGoodFields++;
-                    if (!"".equals(countMap.get("countField".concat(String.valueOf(i))).getText())) countGoodFields++;
-                }
-                if (countGoodFields == number)
-                {
-                    getResult(number, name);
-                    if (!saved) {
-                        JOptionPane.showMessageDialog(null, approachResult);
-                        saved = true;
-                    } else { JOptionPane.showMessageDialog(null, "Данные уже сохранены"); }
-                }
-                else { JOptionPane.showMessageDialog(null, "Заполните все поля"); }
-            }
-        });
-    }
+//    protected Exercise(boolean finalCount, int number, String name, boolean timing)
+//    {
+//        panel = this;
+//        saved = false;
+//        height = marginTop + (sizey + spacey) * ( number + 2 ) + marginBottom;
+//        width = marginLR + textSizeX + spacex + sizex * 2 + spacex + marginLR + 5;
+//        setPreferredSize(new Dimension(width, height));
+//        setLayout(null);
+//        
+//        int countXPos, YPos, textXPos;
+//        textXPos = marginLR;
+////        weightXPos = marginLR + textSizeX + spacex;
+//        countXPos = marginLR + textSizeX;// + spacex;// + sizex + spacex;
+//        YPos = marginTop;
+//        
+//        trainLabel = new JLabel(name);
+////        weightLabel = new JLabel("Вес");
+//        countLabel = new JLabel("Повторов");
+//        
+//        panel.add(trainLabel);
+//        trainLabel.setSize(textSizeX, sizey);
+//        trainLabel.setLocation(textXPos, YPos-5);
+//        trainLabel.setHorizontalAlignment(JTextField.CENTER);
+//        
+//        
+////        panel.add(weightLabel);
+////        weightLabel.setSize(sizex, sizey);
+////        weightLabel.setLocation(weightXPos, YPos-5);
+////        weightLabel.setHorizontalAlignment(JTextField.CENTER);
+////        weightLabel.setBorder(lightBorder);
+//        
+//        panel.add(countLabel);
+//        countLabel.setSize((sizex+marginLR)*2, sizey);
+//        countLabel.setLocation(countXPos, YPos-5);
+//        countLabel.setHorizontalAlignment(JTextField.CENTER);
+//        countLabel.setBorder(lightBorder);
+//        
+//        YPos += spacey + sizey;
+//        
+//        for (int i = 0; i < number; i++)
+//        {
+//            countMap.put("countField".concat(String.valueOf(i)), new JTextField());
+//            
+//            trainFields.add(i, new JLabel("Подход №".concat(String.valueOf(i + 1)), JLabel.CENTER));
+//            
+//            panel.add(trainFields.get(i));
+//            trainFields.get(i).setSize(textSizeX, sizey);
+//            trainFields.get(i).setLocation(textXPos, YPos);
+//            
+//            panel.add(countMap.get("countField".concat(String.valueOf(i))));
+//            countMap.get("countField".concat(String.valueOf(i))).setSize((sizex+marginLR)*2, sizey);
+//            countMap.get("countField".concat(String.valueOf(i))).setLocation(countXPos, YPos);
+//            countMap.get("countField".concat(String.valueOf(i))).setHorizontalAlignment(JTextField.CENTER);
+//            countMap.get("countField".concat(String.valueOf(i))).setBorder(darkBorder);
+//            countMap.get("countField".concat(String.valueOf(i))).setMargin(inMargin);
+//            
+//            YPos += spacey + sizey;
+//        }
+//        save = new JButton("Сохранить результаты");
+//        panel.add(save);
+//        save.setSize((sizex+marginLR)*2, sizey);
+//        save.setLocation(countXPos, YPos+5);
+//        save.setMargin(inMargin);   
+//        save.addActionListener(new ActionListener() 
+//        { 
+//            public void actionPerformed(ActionEvent e) 
+//            {
+//                int countGoodFields = 0;
+//                for (int i = 0; i < number; i++)
+//                {
+////                        if (!"".equals(weightMap.get("weightField".concat(String.valueOf(i))).getText())) countGoodFields++;
+//                    if (!"".equals(countMap.get("countField".concat(String.valueOf(i))).getText())) countGoodFields++;
+//                }
+//                if (countGoodFields == number)
+//                {
+//                    getResult(number, name);
+//                    if (!saved) {
+//                        JOptionPane.showMessageDialog(null, approachResult);
+//                        saved = true;
+//                    } else { JOptionPane.showMessageDialog(null, "Данные уже сохранены"); }
+//                }
+//                else { JOptionPane.showMessageDialog(null, "Заполните все поля"); }
+//            }
+//        });
+//    }
     
-    private static void createFields(int number, String name)
+    private static void createFields(boolean finalExercise, String name, int number, int trainingType)
     {
-              
         int weightXPos, countXPos, YPos, textXPos;
         textXPos = marginLR;
         weightXPos = marginLR + textSizeX + spacex;
@@ -158,7 +175,7 @@ public class Exercise extends JPanel {
         YPos = marginTop;
         
         trainLabel = new JLabel(name);
-        weightLabel = new JLabel("Вес");
+        
         countLabel = new JLabel("Повторов");
         
         panel.add(trainLabel);
@@ -166,12 +183,21 @@ public class Exercise extends JPanel {
         trainLabel.setLocation(textXPos, YPos-5);
         trainLabel.setHorizontalAlignment(JTextField.CENTER);
         
+        if (trainingType != 1)
+        {
+            sizex = buttonSizeX;
+            countXPos = weightXPos;
+        }
         
-        panel.add(weightLabel);
-        weightLabel.setSize(sizex, sizey);
-        weightLabel.setLocation(weightXPos, YPos-5);
-        weightLabel.setHorizontalAlignment(JTextField.CENTER);
-        weightLabel.setBorder(lightBorder);
+        if (trainingType == 1)
+        {
+            weightLabel = new JLabel("Вес");
+            panel.add(weightLabel);
+            weightLabel.setSize(sizex, sizey);
+            weightLabel.setLocation(weightXPos, YPos-5);
+            weightLabel.setHorizontalAlignment(JTextField.CENTER);
+            weightLabel.setBorder(lightBorder);
+        }
         
         panel.add(countLabel);
         countLabel.setSize(sizex, sizey);
@@ -183,21 +209,12 @@ public class Exercise extends JPanel {
         
         for (int i = 0; i < number; i++)
         {
-            weightMap.put("weightField".concat(String.valueOf(i)), new JTextField());
             countMap.put("countField".concat(String.valueOf(i)), new JTextField());
-            
             trainFields.add(i, new JLabel("Подход №".concat(String.valueOf(i + 1)), JLabel.CENTER));
             
             panel.add(trainFields.get(i));
             trainFields.get(i).setSize(textSizeX, sizey);
             trainFields.get(i).setLocation(textXPos, YPos);
-            
-            panel.add(weightMap.get("weightField".concat(String.valueOf(i))));
-            weightMap.get("weightField".concat(String.valueOf(i))).setSize(sizex, sizey);
-            weightMap.get("weightField".concat(String.valueOf(i))).setLocation(weightXPos, YPos);
-            weightMap.get("weightField".concat(String.valueOf(i))).setHorizontalAlignment(JTextField.CENTER);
-            weightMap.get("weightField".concat(String.valueOf(i))).setBorder(darkBorder);
-            weightMap.get("weightField".concat(String.valueOf(i))).setMargin(inMargin);
             
             panel.add(countMap.get("countField".concat(String.valueOf(i))));
             countMap.get("countField".concat(String.valueOf(i))).setSize(sizex, sizey);
@@ -206,12 +223,23 @@ public class Exercise extends JPanel {
             countMap.get("countField".concat(String.valueOf(i))).setBorder(darkBorder);
             countMap.get("countField".concat(String.valueOf(i))).setMargin(inMargin);
             
+            if (trainingType == 1)
+            {
+                weightMap.put("weightField".concat(String.valueOf(i)), new JTextField());
+                panel.add(weightMap.get("weightField".concat(String.valueOf(i))));
+                weightMap.get("weightField".concat(String.valueOf(i))).setSize(sizex, sizey);
+                weightMap.get("weightField".concat(String.valueOf(i))).setLocation(weightXPos, YPos);
+                weightMap.get("weightField".concat(String.valueOf(i))).setHorizontalAlignment(JTextField.CENTER);
+                weightMap.get("weightField".concat(String.valueOf(i))).setBorder(darkBorder);
+                weightMap.get("weightField".concat(String.valueOf(i))).setMargin(inMargin);
+            }
+            
             YPos += spacey + sizey;
         }
         
         save = new JButton("Сохранить результаты");
         panel.add(save);
-        save.setSize((2 * sizex + spacex), sizey);
+        save.setSize(buttonSizeX, sizey);
         save.setLocation(weightXPos, YPos+5);
         save.setMargin(inMargin);   
         save.addActionListener(new ActionListener() 
@@ -221,10 +249,28 @@ public class Exercise extends JPanel {
                 int countGoodFields = 0;
                 for (int i = 0; i < number; i++)
                 {
-                    if (!"".equals(weightMap.get("weightField".concat(String.valueOf(i))).getText())) countGoodFields++;
+                    if (trainingType == 1)
+                    { 
+                        if (!"".equals(weightMap.get("weightField".concat(String.valueOf(i))).getText())) countGoodFields++;
+                    }
                     if (!"".equals(countMap.get("countField".concat(String.valueOf(i))).getText())) countGoodFields++;
                 }
-                if (countGoodFields == (2*number))
+                if (trainingType != 1)
+                {
+                    if (countGoodFields == number)
+                    {
+                        canGetResult = true;
+                    }
+                }
+                else
+                {
+                    if (countGoodFields == (2*number))
+                    { 
+                        canGetResult = true; 
+                    }
+                }                
+                
+                if (canGetResult)
                 {
                     getResult(number, name);
                     if (!saved) {
@@ -259,5 +305,23 @@ public class Exercise extends JPanel {
             appRes.append(" ");
         }
         approachResult = String.valueOf(appRes);
+    }
+    private void resetValues()
+    {
+        height = 15; 
+        width = 15 ;
+        marginTop = 15;
+        marginBottom = 20;
+        marginLR = 5;
+        sizex = 70;
+        sizey = 30;
+        spacex = 15;
+        spacey = 5;
+        textSizeX = 150;
+        buttonSizeX = 155;
+        canGetResult = false;
+        weightMap = new HashMap<>();
+        countMap = new HashMap<>();
+        trainFields = new ArrayList<>();
     }
 }
