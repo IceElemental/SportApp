@@ -283,10 +283,9 @@ public class Exercise extends JPanel {
         });*/
     }
     
-    
-    protected static void getResult(boolean finalExercise, String name, int number, int trainingType)
-        {
-        StringBuilder appRes = new StringBuilder(currDate);
+    protected static boolean canCalculate(int number, int trainingType)
+    {
+        canGetResult = false;
         int countGoodFields = 0;
             for (int i = 0; i < number; i++)
             {
@@ -309,8 +308,38 @@ public class Exercise extends JPanel {
                 { 
                     canGetResult = true; 
                 }
-            }                
-            if (canGetResult)
+            }              
+            
+        return canGetResult;
+    }
+    
+    protected static void getResult(boolean finalExercise, String name, int number, int trainingType)
+        {
+        StringBuilder appRes = new StringBuilder(currDate);
+//        int countGoodFields = 0;
+//            for (int i = 0; i < number; i++)
+//            {
+//                if (trainingType == 1)
+//                { 
+//                    if (!"".equals(weightMap.get("weightField".concat(String.valueOf(i))).getText())) { countGoodFields++; }
+//                }
+//                if (!"".equals(countMap.get("countField".concat(String.valueOf(i))).getText())) { countGoodFields++; }
+//            }
+//            if (trainingType != 1)
+//            {
+//                if (countGoodFields == number)
+//                {
+//                    canGetResult = true;
+//                }
+//            }
+//            else
+//            {
+//                if (countGoodFields == (2*number))
+//                { 
+//                    canGetResult = true; 
+//                }
+//            }                
+            if (canCalculate(number, trainingType))
             {
                 if (weightMap.size() !=0)
                 {
