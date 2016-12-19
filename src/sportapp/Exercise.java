@@ -62,7 +62,7 @@ public class Exercise extends JPanel {
         resetValues();
         panel = this;
         saved = false;
-        height = marginTop + (sizey + spacey) * ( number + 2 ) + marginBottom;
+        height = marginTop + (sizey + spacey) * ( number + 1 ) + marginBottom;
         width = marginLR + textSizeX + spacex + sizex * 2 + spacex + marginLR + 5;
         setPreferredSize(new Dimension(width, height));
         setLayout(null);
@@ -236,7 +236,7 @@ public class Exercise extends JPanel {
             
             YPos += spacey + sizey;
         }
-        
+        /*
         save = new JButton("Сохранить результаты");
         panel.add(save);
         save.setSize(buttonSizeX, sizey);
@@ -280,32 +280,92 @@ public class Exercise extends JPanel {
                 }
                 else { JOptionPane.showMessageDialog(null, "Заполните все поля"); }
             }
-        });
+        });*/
     }
-
-    private static void getResult(int number, String name) {
-        StringBuilder appRes = new StringBuilder(currDate);
-        appRes.append(" ");
-        appRes.append(name);
-        appRes.append(" ");
-        appRes.append(number);
-        appRes.append(" ");
-        if (weightMap.size() !=0)
+    
+    
+    protected static void getResult(boolean finalExercise, String name, int number, int trainingType)
         {
+        StringBuilder appRes = new StringBuilder(currDate);
+        int countGoodFields = 0;
             for (int i = 0; i < number; i++)
             {
-                appRes.append(weightMap.get("weightField".concat(String.valueOf(i))).getText());
-                appRes.append(" ");
+                if (trainingType == 1)
+                { 
+                    if (!"".equals(weightMap.get("weightField".concat(String.valueOf(i))).getText())) { countGoodFields++; }
+                }
+                if (!"".equals(countMap.get("countField".concat(String.valueOf(i))).getText())) { countGoodFields++; }
+            }
+            if (trainingType != 1)
+            {
+                if (countGoodFields == number)
+                {
+                    canGetResult = true;
+                }
+            }
+            else
+            {
+                if (countGoodFields == (2*number))
+                { 
+                    canGetResult = true; 
+                }
+            }                
+            if (canGetResult)
+            {
+                if (weightMap.size() !=0)
+                {
+                    for (int i = 0; i < number; i++)
+                    {
+                        appRes.append(weightMap.get("weightField".concat(String.valueOf(i))).getText());
+                        appRes.append(" ");
+                    }
+                }
+                for (int i = 0; i < number; i++)
+                {
+                    appRes.append(countMap.get("countField".concat(String.valueOf(i))).getText());
+                    appRes.append(" ");
+                }
+                approachResult = String.valueOf(appRes);
+                if (!saved) 
+                {
+                    JOptionPane.showMessageDialog(null, approachResult);
+                    saved = true;
+                } 
+                else 
+                { 
+                    JOptionPane.showMessageDialog(null, "Данные уже сохранены"); 
+                }
+            }
+            else 
+            { 
+                JOptionPane.showMessageDialog(null, "Заполните все поля"); 
             }
         }
-        
-        for (int i = 0; i < number; i++)
-        {
-            appRes.append(countMap.get("countField".concat(String.valueOf(i))).getText());
-            appRes.append(" ");
-        }
-        approachResult = String.valueOf(appRes);
-    }
+
+//    private static String getResult(int number, String name) {
+//        StringBuilder appRes = new StringBuilder(currDate);
+//        appRes.append(" ");
+//        appRes.append(name);
+//        appRes.append(" ");
+//        appRes.append(number);
+//        appRes.append(" ");
+//        if (weightMap.size() !=0)
+//        {
+//            for (int i = 0; i < number; i++)
+//            {
+//                appRes.append(weightMap.get("weightField".concat(String.valueOf(i))).getText());
+//                appRes.append(" ");
+//            }
+//        }
+//        
+//        for (int i = 0; i < number; i++)
+//        {
+//            appRes.append(countMap.get("countField".concat(String.valueOf(i))).getText());
+//            appRes.append(" ");
+//        }
+//        approachResult = String.valueOf(appRes);
+//        return approachResult;
+//    }
     private void resetValues()
     {
         height = 15; 

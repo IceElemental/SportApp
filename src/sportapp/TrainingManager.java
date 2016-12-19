@@ -33,7 +33,7 @@ public class TrainingManager extends JPanel {
     private static int intTrainingType, repeatCount = 0;
     private static LineBorder lineBorder = new LineBorder(Color.DARK_GRAY);
     private static String trainingName;
-//    private static final String exSeparator = " _!_!_ ";
+//    private static final String EX_SEPARATOR = " _!_!_ ";
     private static ArrayList<String> trainingList = new ArrayList<>();
     private static Object[] bufTrainingList;
     
@@ -67,7 +67,7 @@ public class TrainingManager extends JPanel {
         buildExerciseList();
         resetValues();
         
-        trainingName = "не выбрано";
+        trainingName = SportApp.BLANK_NAME;
         
         profileTraining = this;
         profileTraining.setLayout(null);
@@ -162,11 +162,11 @@ public class TrainingManager extends JPanel {
                                     {
                                         if (i != (exerciseCount - 1) )
                                         {
-                                            resultExercise += exerciseName.concat(SportApp.exSeparator).concat(String.valueOf(intTrainingType)).concat(SportApp.exSeparator).concat(String.valueOf(repeatCount).concat(System.getProperty("line.separator")));
+                                            resultExercise += exerciseName.concat(SportApp.EX_SEPARATOR).concat(String.valueOf(intTrainingType)).concat(SportApp.EX_SEPARATOR).concat(String.valueOf(repeatCount).concat(System.getProperty("line.separator")));
                                         }
                                         else
                                         {
-                                            resultExercise += exerciseName.concat(SportApp.exSeparator).concat(String.valueOf(intTrainingType)).concat(SportApp.exSeparator).concat(String.valueOf(repeatCount));
+                                            resultExercise += exerciseName.concat(SportApp.EX_SEPARATOR).concat(String.valueOf(intTrainingType)).concat(SportApp.EX_SEPARATOR).concat(String.valueOf(repeatCount));
                                         }
                                     }
                                 }
@@ -197,11 +197,12 @@ public class TrainingManager extends JPanel {
                     try
                     {
                         killTraining.delete();
-                        selectedTraining.setText("не выбрано");
+                        System.out.println(killTraining.toString());
+                        selectedTraining.setText(SportApp.BLANK_NAME);
                     }
                     catch (Exception ex)
                     {
-                        
+                        System.out.println("что-то пошло не так");
                     }
                 } 
             }

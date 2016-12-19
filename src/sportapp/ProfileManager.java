@@ -56,7 +56,7 @@ public class ProfileManager extends JPanel{
     {
         super();
         
-        profileName = "не выбрано";
+        profileName = SportApp.BLANK_NAME;
         
         ProfileButtonListener profButtonListener = new ProfileButtonListener();
         
@@ -141,7 +141,7 @@ public class ProfileManager extends JPanel{
                     bufferProfile = new File((SportApp.getProfileDir().toString()).concat(System.getProperty("file.separator")).concat(profileName));
                     deleteTheProfile(bufferProfile);
                     bufferProfile.delete();
-                    selectedProfile.setText("не выбрано");
+                    selectedProfile.setText(SportApp.BLANK_NAME);
                 }
             }
         }

@@ -29,7 +29,8 @@ public class SportApp {
         protected static final String FREE_WEIGHT = "Тренировка с отягощением";
         protected static final String NO_WEIGHT = "Тренировка без отягощения";
         protected static final String TIME_TRAINING = "Тренировка на время";
-        protected static final String exSeparator = " _!_!_ ";
+        protected static final String BLANK_NAME = "не выбрано";
+        protected static final String EX_SEPARATOR = " _!_!_ ";
         private static Object[] listExercises = new Object[3];
     
         static {

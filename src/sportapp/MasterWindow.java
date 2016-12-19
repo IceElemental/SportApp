@@ -41,8 +41,8 @@ public class MasterWindow extends JFrame {
         private static JFrame mainFrame;
         private static ProfileManager profileManagerPanel;
         private static TrainingManager trainingManagerPanel;
-        private static JPanel masterPanel, profilePanel, trainingPanel, trainignAvailablePanel, exercisePanel;
-        private static JButton showPanel1, showPanel2, clearPanel, manageTraining, manageProfile, createProfile, selectProfile, createTraining, selectTraining, startTraining;
+        private static JPanel masterPanel, profilePanel, trainingPanel, trainignAvailablePanel, exercisePanel, resulterPanel;
+        private static JButton saveResult, nextExercise, showPanel1, showPanel2, clearPanel, manageTraining, manageProfile, createProfile, selectProfile, createTraining, selectTraining, startTraining;
         private static JComboBox selectProfileBox;
         private static JScrollPane exerciseWindow;
         private static JLabel greetings, currentProfileLabel, currentProfileValue, currentTrainingLabel, currentTrainingValue;
@@ -54,18 +54,21 @@ public class MasterWindow extends JFrame {
         private static int profilePanelYPos = 50, trainingAvailablePanelYPos = 189;
         private static int createProfileYPos = 140, selectProfileYPos = 110;
         private static int createTrainigYPos = 260, selectTrainigYPos = 210;
-        private static int exerciseWidth = 350, exerciseHeight = 300, exerciseXPos = 250, exerciseYPos = 50;
+        private static int exerciseWidth = 350, exerciseHeight = 260, exerciseXPos = 250, exerciseYPos = 50, resulterPanelHeight = 40;
         private static int runningExerciseCount = 0;
+        private static final int exNamePos = 0, exCountPos = 2, exTypePos = 1;
         private static String profileString, profileName, trainingString, trainingName, bufTrainingLine;
-        private static boolean exerciseRunnung = true, trainingManageAvailable = false, trainingStartAvailable = false, profileManageAvailable = false, seePanel2 = true, profileManagerWorking = false, trainingManagerWorking = false, trainingStarted = false, lastExercise = false;
-        
+        private static boolean exerciseRunnung = true, seePanel2 = true, lastExercise = false, nextExerciseAvailable = false;
+        private static boolean trainingManageAvailable = false, trainingStartAvailable = false, profileManageAvailable = false;
+        private static boolean profileManagerWorking = false, trainingManagerWorking = false, trainingStarted = false;
+                
         private ButtonListener buttonchik = new ButtonListener();
         private Dimension mainWindow = new Dimension(mainWindowWidth, mainWindowHeight);
         private Insets noMargin = new Insets(0,0,0,0);
         private LineBorder lineBorder = new LineBorder(Color.GRAY);
         
-        private static File bufferProfileDir, bufferTrainingDir;
-        private static String[] trainreader;
+        private static File bufferProfileDir, bufferTrainingDir, currentStartedTraining;
+        private static String[] trainreader, currentWorkingExerciseMass;
         private ArrayList<String> currentTrainingList;
         
         public MasterWindow() throws FileNotFoundException, IOException
@@ -82,8 +85,8 @@ public class MasterWindow extends JFrame {
             greetings.setLocation(15, 10);
             greetings.setSize(mainWindowWidth-30, 30);
             greetings.setHorizontalAlignment(JLabel.CENTER);
-            if (profileName == null) {profileName = "не выбрано"; }
-            if (trainingName == null) { trainingName = "не выбрано"; }
+            if (profileName == null) {profileName = SportApp.BLANK_NAME; }
+            if (trainingName == null) { trainingName = SportApp.BLANK_NAME; }
             profileString = "Выбранный профиль:";
             trainingString = "Выбранная тренировка:";
                    
@@ -175,6 +178,28 @@ public class MasterWindow extends JFrame {
             exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
             exerciseWindow.setBorder(lineBorder);
             
+            
+            resulterPanel = new JPanel();
+            add(resulterPanel);
+            resulterPanel.setSize(exerciseWidth, resulterPanelHeight);
+            resulterPanel.setLocation(exerciseXPos, (exerciseYPos + exerciseHeight - 1));
+            resulterPanel.setLayout(null);
+            resulterPanel.setBorder(lineBorder);
+            
+            nextExercise = new JButton("Следующее упражнение");
+            resulterPanel.add(nextExercise);
+            nextExercise.setSize(166, 30);
+            nextExercise.setLocation(5,5);
+            nextExercise.setMargin(noMargin);
+            nextExercise.setEnabled(nextExerciseAvailable);
+            
+            saveResult = new JButton("Сохранить результаты");
+            resulterPanel.add(saveResult);
+            saveResult.setSize(166, 30);
+            saveResult.setLocation(177,5);
+            saveResult.setMargin(noMargin);
+            saveResult.setEnabled(lastExercise);
+            
             showPanel1 = new JButton("Show panel1");
             add(showPanel1);
             showPanel1.setSize(130, 30);
@@ -198,7 +223,7 @@ public class MasterWindow extends JFrame {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(newTraining))); 
 //            FileReader reader = new FileReader(newTraining);
             String test = reader.readLine();
-            trainreader = test.split(SportApp.exSeparator);
+            trainreader = test.split(SportApp.EX_SEPARATOR);
             
         }
         
@@ -239,6 +264,7 @@ public class MasterWindow extends JFrame {
                 mainFrame.add(exerciseWindow);
                 exerciseWindow.setSize(exerciseWidth, exerciseHeight);
                 exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+                exerciseWindow.setBorder(lineBorder);
                 mainFrame.validate();
                 mainFrame.repaint();
             }
@@ -259,6 +285,7 @@ public class MasterWindow extends JFrame {
                 mainFrame.add(exerciseWindow);
                 exerciseWindow.setSize(exerciseWidth, exerciseHeight);
                 exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+                exerciseWindow.setBorder(lineBorder);
                 mainFrame.validate();
                 mainFrame.repaint();
             }
@@ -292,13 +319,17 @@ public class MasterWindow extends JFrame {
 //                currentProfileLabel.setText("НАЖАЛ");
                 if (profileManagerWorking == true)
                 {
+//                    System.out.println("profManagerWorking: " + profileManagerWorking + "\n prof manager: " + profileManageAvailable + "\n train manager: " + trainingManageAvailable + "\n train starter: " + trainingStartAvailable);
                     profileManageAvailable = true;
                     trainingManageAvailable = false;
                     trainingStartAvailable = false;
                     manageProfile.setEnabled(profileManageAvailable);
                     manageTraining.setEnabled(trainingManageAvailable);
                     startTraining.setEnabled(trainingStartAvailable);
+                    
                     manageProfile.setText("Выбрать текущий профиль");
+                    
+//                    System.out.println("profManagerWorking: " + profileManagerWorking + "\n prof manager: " + profileManageAvailable + "\n train manager: " + trainingManageAvailable + "\n train starter: " + trainingStartAvailable);
                     if (exerciseWindow != null)
                     {
                         mainFrame.remove(exerciseWindow);
@@ -312,18 +343,21 @@ public class MasterWindow extends JFrame {
                     exerciseWindow.setBorder(lineBorder);
                     mainFrame.validate();
                     mainFrame.repaint();
+//                    System.out.println("profManagerWorking: " + profileManagerWorking + "\n prof manager: " + profileManageAvailable + "\n train manager: " + trainingManageAvailable + "\n train starter: " + trainingStartAvailable);
 //                    currentProfileValue.setText("НАЖАЛ");
                 }
                 if (profileManagerWorking == false)
                 {
-                    
+//                    System.out.println("profManagerWorking: " + profileManagerWorking + "\n prof manager: " + profileManageAvailable + "\n train manager: " + trainingManageAvailable + "\n train starter: " + trainingStartAvailable);
                     profileManageAvailable = true;
-                    trainingManageAvailable = true;
+                    trainingManageAvailable = false;
                     trainingStartAvailable = false;
                     manageProfile.setEnabled(profileManageAvailable);
                     manageTraining.setEnabled(trainingManageAvailable);
                     startTraining.setEnabled(trainingStartAvailable);
+                    
                     manageProfile.setText("Управление профилями");
+                    
                     currentProfileValue.setText(profileManagerPanel.getCurrentProfile());
                     if (exerciseWindow != null)
                     {
@@ -333,10 +367,13 @@ public class MasterWindow extends JFrame {
                     profileManagerPanel = null;
                     mainFrame.validate();
                     mainFrame.repaint();
-                    if ( !"не выбрано".equals(currentProfileValue.getText()) ) 
+                    if ( !SportApp.BLANK_NAME.equals(currentProfileValue.getText()) ) 
                     {
                         trainingManageAvailable = true;
                         trainingStartAvailable = false;
+//                        manageTraining.setEnabled(trainingManageAvailable);
+//                        startTraining.setEnabled(trainingStartAvailable);
+                        
                         bufferProfileDir = SportApp.getProfileDir();
                         bufferTrainingDir = new File((bufferProfileDir.toString()).concat(System.getProperty("file.separator")).concat(currentProfileValue.getText()).concat(System.getProperty("file.separator").concat("Trainings")));
                         if (!bufferTrainingDir.exists())
@@ -344,16 +381,19 @@ public class MasterWindow extends JFrame {
                             bufferTrainingDir.mkdirs();
                         }
                     }
-                    else { trainingManageAvailable = false; } 
-                    manageTraining.setEnabled(trainingManageAvailable);
+                    else 
+                    { 
+                        trainingManageAvailable = false; 
+                    } 
+                    manageTraining.setEnabled(trainingManageAvailable); 
                     startTraining.setEnabled(trainingStartAvailable);
+                    
                     exerciseWindow = new JScrollPane();
                     mainFrame.add(exerciseWindow);
                     exerciseWindow.setSize(exerciseWidth, exerciseHeight);
                     exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
                     exerciseWindow.setBorder(lineBorder);
-                    
-//                    currentProfileValue.setText("ОТЖАЛ");
+
                 }
             }
 //========================================================================            
@@ -391,7 +431,7 @@ public class MasterWindow extends JFrame {
                 {
                     manageTraining.setText("Управление тренировками");
                     currentTrainingValue.setText(trainingManagerPanel.getCurrentTraining());
-                    if (currentTrainingValue.getText().equals("не выбрано"))
+                    if (currentTrainingValue.getText().equals(SportApp.BLANK_NAME))
                     {
                         trainingStartAvailable = false;
                     }
@@ -422,37 +462,51 @@ public class MasterWindow extends JFrame {
                     mainFrame.repaint();
                 }
             }
-            // Сама тренировка
+//========================================================================            
+//                          Сама тренировка
+//========================================================================
+
             if (e.getSource() == startTraining)
             {
                 trainingStarted = !trainingStarted;
                 if (trainingStarted == true)
-            {
-                trainingManageAvailable = false;
-                trainingStartAvailable = false;
-                manageProfile.setEnabled(trainingManageAvailable);
-                manageTraining.setEnabled(trainingStartAvailable);
-                startTraining.setText("Прервать тренировку");
+                {
+                    runningExerciseCount = 0;
+                    trainingManageAvailable = false;
+                    trainingStartAvailable = false;
+                    manageProfile.setEnabled(trainingManageAvailable);
+                    manageTraining.setEnabled(trainingStartAvailable);
+                    startTraining.setText("Прервать тренировку");
+                    //Читаем файл
+                    currentStartedTraining = new File(bufferTrainingDir.toString().concat(System.getProperty("file.separator")).concat(currentTrainingValue.getText()));
+                    System.out.println(currentStartedTraining.toString());
+                    //пишем содержимле файла в массив
+                    try {
+                        currentTrainingList = new ArrayList<String>();
+                        BufferedReader trainReader = new BufferedReader(new InputStreamReader(new FileInputStream(currentStartedTraining)));
+                        while ((bufTrainingLine = trainReader.readLine()) != null )
+                        {
+                            currentTrainingList.add(bufTrainingLine);
+                        }
+                        trainReader.close();
+                    } 
+                    catch (FileNotFoundException ex) {} 
+                    catch (IOException ex) {}
                 
-                File currentStartedTraining = new File(bufferTrainingDir.toString().concat(System.getProperty("file.separator")).concat(currentTrainingValue.getText()));
-                System.out.println(currentStartedTraining.toString());
-                try {
-                    currentTrainingList = new ArrayList<String>();
-                    BufferedReader trainReader = new BufferedReader(new InputStreamReader(new FileInputStream(currentStartedTraining)));
-                    while ((bufTrainingLine = trainReader.readLine()) != null )
+                    if (currentTrainingList.size() == 1)
                     {
-                        currentTrainingList.add(bufTrainingLine);
+                        lastExercise = true;
+                        saveResult.setEnabled(lastExercise);
                     }
-                    trainReader.close();
-                } catch (FileNotFoundException ex) {
-//                        Logger.getLogger(MasterWindow.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {}
+                    else
+                    {
+                        nextExerciseAvailable = true;
+                        nextExercise.setEnabled(nextExerciseAvailable);
+                    }
 //                lastExercise
-                    mainFrame.validate();
-                    mainFrame.repaint();
                     
-                    String[] currentWorkingExerciseMass = (currentTrainingList.get(runningExerciseCount)).split(SportApp.exSeparator);
-
+                    // пишем первую строку в массив упражнения
+                    currentWorkingExerciseMass = (currentTrainingList.get(runningExerciseCount)).split(SportApp.EX_SEPARATOR);
                     if (exerciseWindow != null) 
                     { 
                         mainFrame.remove(exerciseWindow);
@@ -467,24 +521,23 @@ public class MasterWindow extends JFrame {
                     {
                         lastExercise = true;
                     }
-                    exercisePanel = new Exercise(lastExercise, currentWorkingExerciseMass[0], Integer.parseInt(currentWorkingExerciseMass[2]), Integer.parseInt(currentWorkingExerciseMass[1]));
+                    exercisePanel = new Exercise(lastExercise, currentWorkingExerciseMass[exNamePos], Integer.parseInt(currentWorkingExerciseMass[exCountPos]), Integer.parseInt(currentWorkingExerciseMass[exTypePos]));
                     exerciseWindow = new JScrollPane(exercisePanel);
                     mainFrame.add(exerciseWindow);
                     exerciseWindow.setSize(exerciseWidth, exerciseHeight);
                     exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
                     mainFrame.validate();
                     mainFrame.repaint();
+                    }
+                
+                if (trainingStarted == false)
+                {
+                    trainingManageAvailable = true;
+                    trainingStartAvailable = true;
+                    manageProfile.setEnabled(trainingManageAvailable);
+                    manageTraining.setEnabled(trainingStartAvailable);
+                    startTraining.setText("Начать тренировку");
                 }
-             }
-            if (trainingStarted == false)
-            {
-                trainingManageAvailable = true;
-                trainingStartAvailable = true;
-                manageProfile.setEnabled(trainingManageAvailable);
-                manageTraining.setEnabled(trainingStartAvailable);
-                startTraining.setText("Начать тренировку");
-//                currentProfileValue.setText("ОТЖАЛ");
-//                currentTrainingValue.setText("ОТЖАЛ");
             }
         }
     }
