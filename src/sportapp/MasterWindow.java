@@ -26,6 +26,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -49,7 +50,7 @@ public class MasterWindow extends JFrame {
         private static JLabel greetings, currentProfileLabel, currentProfileValue, currentTrainingLabel, currentTrainingValue;
         private static JTextArea profileArea;
         
-        private static int mainWindowWidth = 620, mainWindowHeight = 500;
+        private static int mainWindowWidth = 620, mainWindowHeight = 390;
         private static int margin = 15;
         private static int leftPanelWidth = 210, profilePanelHeight = 110, trainingAvailablePanelHeight = 160;
         private static int profilePanelYPos = 50, trainingAvailablePanelYPos = 189;
@@ -58,7 +59,7 @@ public class MasterWindow extends JFrame {
         private static int exerciseWidth = 350, exerciseHeight = 260, exerciseXPos = 250, exerciseYPos = 50, resulterPanelHeight = 40;
         private static int runningExerciseCount = 0;
         private static final int exNamePos = 0, exCountPos = 2, exTypePos = 1;
-        private static String profileString, profileName, trainingString, trainingName, bufTrainingLine;
+        private static String profileString, profileName, trainingString, trainingName, bufTrainingLine, trainingResult;
         private static boolean exerciseRunnung = true, seePanel2 = true, lastExercise = false, nextExerciseAvailable = false;
         private static boolean trainingManageAvailable = false, trainingStartAvailable = false, profileManageAvailable = false;
         private static boolean profileManagerWorking = false, trainingManagerWorking = false, trainingStarted = false;
@@ -68,7 +69,7 @@ public class MasterWindow extends JFrame {
         private Insets noMargin = new Insets(0,0,0,0);
         private LineBorder lineBorder = new LineBorder(Color.GRAY);
         
-        private static File bufferProfileDir, bufferTrainingDir, currentStartedTraining;
+        private static File bufferProfileDir, bufferTrainingDir, currentStartedTraining, trainingResultOutput, bufferTrainingResultDir;
         private static String[] trainreader, currentWorkingExerciseMass;
         private static ArrayList<String> currentTrainingList;
         
@@ -81,7 +82,7 @@ public class MasterWindow extends JFrame {
             setResizable(false);
             setLocationRelativeTo(null);
             setLayout(null);
-            greetings = new JLabel("Сегодня отличный день для тренировки!");
+            greetings = new JLabel("Привет! Добро пожаловать в пока ещё не до конца рабочую систему учёта тренировок!");
             add(greetings);
             greetings.setLocation(15, 10);
             greetings.setSize(mainWindowWidth-30, 30);
@@ -203,24 +204,24 @@ public class MasterWindow extends JFrame {
             saveResult.setEnabled(lastExercise);
             saveResult.addActionListener(buttonchik);
             
-            showPanel1 = new JButton("Show panel1");
-            add(showPanel1);
-            showPanel1.setSize(130, 30);
-            showPanel1.setLocation(130, 400);
-            showPanel1.addActionListener(buttonchik);
-            
-            showPanel2 = new JButton("Show panel2");
-            add(showPanel2);
-            showPanel2.setSize(130, 30);
-            showPanel2.setLocation(400, 400);
-            showPanel2.addActionListener(buttonchik);
-           
-            clearPanel = new JButton("CLEAR");
-            add(clearPanel);
-            clearPanel.setSize(130, 30);
-            clearPanel.setLocation(265, 400);
-            clearPanel.addActionListener(buttonchik);
-            
+//            showPanel1 = new JButton("Show panel1");
+//            add(showPanel1);
+//            showPanel1.setSize(130, 30);
+//            showPanel1.setLocation(130, 400);
+//            showPanel1.addActionListener(buttonchik);
+//            
+//            showPanel2 = new JButton("Show panel2");
+//            add(showPanel2);
+//            showPanel2.setSize(130, 30);
+//            showPanel2.setLocation(400, 400);
+//            showPanel2.addActionListener(buttonchik);
+//           
+//            clearPanel = new JButton("CLEAR");
+//            add(clearPanel);
+//            clearPanel.setSize(130, 30);
+//            clearPanel.setLocation(265, 400);
+//            clearPanel.addActionListener(buttonchik);
+//            
             
 //            File newTraining = new File("D:\\Prog\\NetBeans\\SportApp\\Profiles\\Мурзяндр\\Trainings\\001");
 //            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(newTraining))); 
@@ -239,6 +240,7 @@ public class MasterWindow extends JFrame {
         protected static void clearCountExercise()
         {
             runningExerciseCount = 0;
+            trainingResult = "";            
         }
         
         protected static File getTrainingDir()
@@ -248,6 +250,7 @@ public class MasterWindow extends JFrame {
         
         protected static void abandonTrainining()
         {
+            clearCountExercise();
             if (exerciseWindow != null)
             {
                 mainFrame.remove(exerciseWindow);
@@ -278,68 +281,68 @@ public class MasterWindow extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == showPanel1)
-            {
-                if (exerciseWindow != null) 
-                { 
-                    mainFrame.remove(exerciseWindow);
-                    exerciseWindow = null;
-                }
-                if (exercisePanel != null) 
-                { 
-                    mainFrame.remove(exercisePanel);
-                    exercisePanel = null;
-                }
-                exercisePanel = new Exercise(false, "Пёс", 2, 1);
-                exerciseWindow = new JScrollPane(exercisePanel);
-                mainFrame.add(exerciseWindow);
-                exerciseWindow.setSize(exerciseWidth, exerciseHeight);
-                exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
-                exerciseWindow.setBorder(lineBorder);
-                mainFrame.validate();
-                mainFrame.repaint();
-            }
-            if (e.getSource() == showPanel2)
-            {
-                if (exerciseWindow != null) 
-                { 
-                    mainFrame.remove(exerciseWindow);
-                    exerciseWindow = null;
-                }
-                if (exercisePanel != null)
-                {
-                    mainFrame.remove(exercisePanel);
-                    exercisePanel = null;
-                }
-                exercisePanel = new Exercise(false, "Отжимания", 5, 2);
-                exerciseWindow = new JScrollPane(exercisePanel);
-                mainFrame.add(exerciseWindow);
-                exerciseWindow.setSize(exerciseWidth, exerciseHeight);
-                exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
-                exerciseWindow.setBorder(lineBorder);
-                mainFrame.validate();
-                mainFrame.repaint();
-            }
-            if (e.getSource() == clearPanel)
-            {
-                if (exerciseWindow != null)
-                {
-                    mainFrame.remove(exerciseWindow);
-                    exerciseWindow = null;
-                }
+//            if (e.getSource() == showPanel1)
+//            {
+//                if (exerciseWindow != null) 
+//                { 
+//                    mainFrame.remove(exerciseWindow);
+//                    exerciseWindow = null;
+//                }
+//                if (exercisePanel != null) 
+//                { 
+//                    mainFrame.remove(exercisePanel);
+//                    exercisePanel = null;
+//                }
+//                exercisePanel = new Exercise(false, "Пёс", 2, 1);
+//                exerciseWindow = new JScrollPane(exercisePanel);
+//                mainFrame.add(exerciseWindow);
+//                exerciseWindow.setSize(exerciseWidth, exerciseHeight);
+//                exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+//                exerciseWindow.setBorder(lineBorder);
+//                mainFrame.validate();
+//                mainFrame.repaint();
+//            }
+//            if (e.getSource() == showPanel2)
+//            {
+//                if (exerciseWindow != null) 
+//                { 
+//                    mainFrame.remove(exerciseWindow);
+//                    exerciseWindow = null;
+//                }
 //                if (exercisePanel != null)
 //                {
 //                    mainFrame.remove(exercisePanel);
 //                    exercisePanel = null;
 //                }
-                exerciseWindow = new JScrollPane();
-                mainFrame.add(exerciseWindow);
-                exerciseWindow.setSize(exerciseWidth, exerciseHeight);
-                exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
-                exerciseWindow.setBorder(lineBorder);
-                mainFrame.validate();
-                mainFrame.repaint();
-            }
+//                exercisePanel = new Exercise(false, "Отжимания", 5, 2);
+//                exerciseWindow = new JScrollPane(exercisePanel);
+//                mainFrame.add(exerciseWindow);
+//                exerciseWindow.setSize(exerciseWidth, exerciseHeight);
+//                exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+//                exerciseWindow.setBorder(lineBorder);
+//                mainFrame.validate();
+//                mainFrame.repaint();
+//            }
+//            if (e.getSource() == clearPanel)
+//            {
+//                if (exerciseWindow != null)
+//                {
+//                    mainFrame.remove(exerciseWindow);
+//                    exerciseWindow = null;
+//                }
+////                if (exercisePanel != null)
+////                {
+////                    mainFrame.remove(exercisePanel);
+////                    exercisePanel = null;
+////                }
+//                exerciseWindow = new JScrollPane();
+//                mainFrame.add(exerciseWindow);
+//                exerciseWindow.setSize(exerciseWidth, exerciseHeight);
+//                exerciseWindow.setLocation(exerciseXPos, exerciseYPos);
+//                exerciseWindow.setBorder(lineBorder);
+//                mainFrame.validate();
+//                mainFrame.repaint();
+//            }
 //========================================================================            
 //                      Управление профилями
 //========================================================================
@@ -407,9 +410,14 @@ public class MasterWindow extends JFrame {
                         
                         bufferProfileDir = SportApp.getProfileDir();
                         bufferTrainingDir = new File((bufferProfileDir.toString()).concat(System.getProperty("file.separator")).concat(currentProfileValue.getText()).concat(System.getProperty("file.separator").concat("Trainings")));
+                        bufferTrainingResultDir = new File((bufferProfileDir.toString()).concat(System.getProperty("file.separator")).concat(currentProfileValue.getText()).concat(System.getProperty("file.separator").concat("TrainingResults")));
                         if (!bufferTrainingDir.exists())
                         {
                             bufferTrainingDir.mkdirs();
+                        }
+                        if (!bufferTrainingResultDir.exists())
+                        {
+                            bufferTrainingResultDir.mkdirs();
                         }
                     }
                     else 
@@ -499,6 +507,12 @@ public class MasterWindow extends JFrame {
 
             if (e.getSource() == startTraining)
             {
+                bufferTrainingResultDir = new File((bufferProfileDir.toString()).concat(System.getProperty("file.separator")).concat(currentProfileValue.getText()).concat(System.getProperty("file.separator")).concat("TrainingResults").concat(System.getProperty("file.separator")).concat(currentTrainingValue.getText()));
+                if (!bufferTrainingResultDir.exists())
+                    {
+                            bufferTrainingResultDir.mkdirs();
+                    }
+                trainingResult = "";
                 trainingStarted = !trainingStarted;
                 if (trainingStarted == true)
                 {
@@ -510,7 +524,7 @@ public class MasterWindow extends JFrame {
                     startTraining.setText("Прервать тренировку");
                     //Читаем файл
                     currentStartedTraining = new File(bufferTrainingDir.toString().concat(System.getProperty("file.separator")).concat(currentTrainingValue.getText()));
-                    System.out.println(currentStartedTraining.toString());
+//                    System.out.println(currentStartedTraining.toString());
                     //пишем содержимле файла в массив
                     try {
                         currentTrainingList = new ArrayList<String>();
@@ -576,7 +590,7 @@ public class MasterWindow extends JFrame {
             {
                 if (Exercise.canCalculate( Integer.parseInt(currentWorkingExerciseMass[exCountPos]), Integer.parseInt(currentWorkingExerciseMass[exTypePos]))) 
                 {
-                    Exercise.getResult(lastExercise, currentWorkingExerciseMass[exNamePos], Integer.parseInt(currentWorkingExerciseMass[exCountPos]), Integer.parseInt(currentWorkingExerciseMass[exTypePos]));
+                    trainingResult += Exercise.getResult(lastExercise, currentWorkingExerciseMass[exNamePos], Integer.parseInt(currentWorkingExerciseMass[exCountPos]), Integer.parseInt(currentWorkingExerciseMass[exTypePos])).concat(System.getProperty("line.separator"));
                     countExercise();
                     if (runningExerciseCount == (currentTrainingList.size()-1) ) 
                     {
@@ -600,14 +614,32 @@ public class MasterWindow extends JFrame {
                 }
                 else
                 {
-                    System.out.println("NONONONONON");
+                    JOptionPane.showMessageDialog(null, "Заполните все поля"); 
                 }
             }
             if (e.getSource() == saveResult)
             {
                 if (Exercise.canCalculate( Integer.parseInt(currentWorkingExerciseMass[exCountPos]), Integer.parseInt(currentWorkingExerciseMass[exTypePos]))) 
                 {
-                    Exercise.getResult(lastExercise, currentWorkingExerciseMass[exNamePos], Integer.parseInt(currentWorkingExerciseMass[exCountPos]), Integer.parseInt(currentWorkingExerciseMass[exTypePos])); 
+                    trainingResult += Exercise.getResult(lastExercise, currentWorkingExerciseMass[exNamePos], Integer.parseInt(currentWorkingExerciseMass[exCountPos]), Integer.parseInt(currentWorkingExerciseMass[exTypePos])).concat(System.getProperty("line.separator")); 
+//                    System.out.println("Ку-ку");
+                    trainingResultOutput = new File((bufferProfileDir.toString()).concat(System.getProperty("file.separator")).concat(currentProfileValue.getText()).concat(System.getProperty("file.separator")).concat("TrainingResults").concat(System.getProperty("file.separator")).concat(currentTrainingValue.getText()).concat(System.getProperty("file.separator")).concat(SportApp.getDate()));
+                    if (!trainingResultOutput.exists()) 
+                    { 
+                        try 
+                        {
+                            trainingResultOutput.createNewFile();
+                        } catch (IOException ex) 
+                        {
+//                            Logger.getLogger(MasterWindow.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    try {
+                        FileOutputStream writeResult = new FileOutputStream(trainingResultOutput);
+                        writeResult.write(trainingResult.getBytes());
+                    } catch (FileNotFoundException ex) {}
+                    catch (IOException ex) {}
+//                    System.out.println(trainingResult);
                     JOptionPane.showMessageDialog(null, "Данные тренировки успешно сохранены");
                     abandonTrainining();
                 }

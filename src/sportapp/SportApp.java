@@ -7,6 +7,8 @@ package sportapp;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 //import java.io.IOException;
 //import javax.swing.filechooser.FileSystemView;
 //import static java.lang.Thread.sleep;
@@ -26,6 +28,10 @@ public class SportApp {
         private static File trainingBasicDir = new File(trainingDirString.concat(System.getProperty("file.separator")).concat("Basic"));
         private static File profileDir = new File(profileDirString);
         
+        private static Date today = new Date();
+        private static SimpleDateFormat makeDate = new SimpleDateFormat("yyyy-MM-dd");
+        private static String currDate = makeDate.format(today);
+        
         protected static final String FREE_WEIGHT = "Тренировка с отягощением";
         protected static final String NO_WEIGHT = "Тренировка без отягощения";
         protected static final String TIME_TRAINING = "Тренировка на время";
@@ -37,6 +43,10 @@ public class SportApp {
             listExercises[0] = FREE_WEIGHT;
             listExercises[1] = NO_WEIGHT;
             listExercises[2] = TIME_TRAINING;
+        }
+        protected static String getDate()
+        {
+            return currDate;
         }
         
         protected static Object[] getExerciseList()

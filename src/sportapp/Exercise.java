@@ -37,9 +37,9 @@ public class Exercise extends JPanel {
     private static JButton save;
     private static JLabel weightLabel, countLabel, trainLabel;
     private static String approachResult = "";
-    private static Date today = new Date();
-    private static SimpleDateFormat makeDate = new SimpleDateFormat("yyyy-MM-dd");
-    private static String currDate = makeDate.format(today);
+//    private static Date today = new Date();
+//    private static SimpleDateFormat makeDate = new SimpleDateFormat("yyyy-MM-dd");
+//    private static String currDate = makeDate.format(today);
     private static boolean saved;
     private static boolean canGetResult;
     private static Border lightBorder = new LineBorder(Color.GRAY);
@@ -313,9 +313,9 @@ public class Exercise extends JPanel {
         return canGetResult;
     }
     
-    protected static void getResult(boolean finalExercise, String name, int number, int trainingType)
+    protected static String getResult(boolean finalExercise, String name, int number, int trainingType)
         {
-        StringBuilder appRes = new StringBuilder(currDate);
+        StringBuilder appRes = new StringBuilder("");
 //        int countGoodFields = 0;
 //            for (int i = 0; i < number; i++)
 //            {
@@ -343,32 +343,41 @@ public class Exercise extends JPanel {
             {
                 if (weightMap.size() !=0)
                 {
+                    appRes.append("weightResults: ");
                     for (int i = 0; i < number; i++)
                     {
                         appRes.append(weightMap.get("weightField".concat(String.valueOf(i))).getText());
                         appRes.append(" ");
                     }
                 }
+                appRes.append(SportApp.EX_SEPARATOR);
+                appRes.append("countResults: ");
                 for (int i = 0; i < number; i++)
                 {
                     appRes.append(countMap.get("countField".concat(String.valueOf(i))).getText());
                     appRes.append(" ");
                 }
+                appRes.append(SportApp.EX_SEPARATOR);
+                appRes.append("trainingType: ").append(trainingType);
                 approachResult = String.valueOf(appRes);
-                if (!saved) 
-                {
-                    JOptionPane.showMessageDialog(null, approachResult);
-                    saved = true;
-                } 
-                else 
-                { 
-                    JOptionPane.showMessageDialog(null, "Данные уже сохранены"); 
-                }
+                return approachResult;
+//                if (!saved) 
+//                {
+//                    JOptionPane.showMessageDialog(null, approachResult);
+//                    saved = true;
+//                } 
+//                else 
+//                { 
+//                    JOptionPane.showMessageDialog(null, "Данные уже сохранены"); 
+//                }
             }
             else 
-            { 
-                JOptionPane.showMessageDialog(null, "Заполните все поля"); 
-            }
+                return null;
+//            else 
+//            { 
+//                JOptionPane.showMessageDialog(null, "Заполните все поля"); 
+//            }
+           
         }
 
 //    private static String getResult(int number, String name) {
